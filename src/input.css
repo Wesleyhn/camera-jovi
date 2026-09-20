@@ -1,0 +1,773 @@
+@import 'tailwindcss';
+@theme {
+  --color-destaque: #40afff;
+  --color-gravador: #ff0000;
+}
+
+@layer components {
+  .btn-liquid-glass {
+    @apply inline-flex items-center justify-center align-middle select-none px-4 py-2 rounded-full bg-black/45 border border-white/10 backdrop-blur-md shadow-[inset_0_1px_0px_rgba(255,255,255,0.15),0_0_9px_rgba(0,0,0,0.35),0_3px_8px_rgba(0,0,0,0.3)] hover:bg-black/55 transition-all duration-300 relative before:absolute before:inset-0 before:rounded-full before:bg-linear-to-br before:from-white/15 before:via-transparent before:to-transparent before:opacity-40 before:pointer-events-none after:absolute after:inset-0 after:rounded-full after:bg-linear-to-tl after:from-white/5 after:via-transparent after:to-transparent after:opacity-30 after:pointer-events-none antialiased;
+  }
+  .liquid-glass {
+    @apply inline-flex items-center justify-center align-middle select-none px-4 py-2 rounded-full bg-black/45 border border-white/10 backdrop-blur-md shadow-[inset_0_1px_0px_rgba(255,255,255,0.15),0_0_9px_rgba(0,0,0,0.35),0_3px_8px_rgba(0,0,0,0.3)] relative before:absolute before:inset-0 before:rounded-full before:bg-linear-to-br before:from-white/15 before:via-transparent before:to-transparent before:opacity-40 before:pointer-events-none after:absolute after:inset-0 after:rounded-full after:bg-linear-to-tl after:from-white/5 after:via-transparent after:to-transparent after:opacity-30 after:pointer-events-none antialiased;
+  }
+
+  .btn-shutter {
+    @apply bg-white rounded-full ring-[5px] ring-black/55 shadow-[0_2px_6px_rgba(0,0,0,0.4)];
+  }
+
+  .zoom-ativo {
+    @apply text-destaque;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  #preloader {
+    transition: opacity 0.5s ease;
+  }
+
+  #preloader.preloader-hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #preloader span {
+    animation: preloader-in 0.7s ease-out both;
+  }
+
+  @keyframes preloader-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+      letter-spacing: 0.05em;
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      letter-spacing: 0.35em;
+    }
+  }
+
+  [data-control='camera'] svg {
+    display: block;
+    width: 21px;
+    height: 21px;
+  }
+
+  [data-control='camera'] button {
+    display: grid;
+    place-items: center;
+    color: rgb(255 255 255 / 0.85);
+    transition: color 0.15s ease;
+  }
+
+  [data-control='camera'] .is-active button {
+    color: #40afff;
+  }
+
+  [data-control='camera'] .is-active button svg {
+    animation: control-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
+  }
+
+  [data-control='menu'] button {
+    color: #40afff;
+  }
+
+  [data-control='menu-open']:not(.hidden) svg,
+  [data-control='menu-close']:not(.hidden) svg {
+    animation: control-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
+  }
+
+  li[data-group='extra']:not(.hidden) {
+    animation: menu-item-fade 0.28s ease-out both;
+  }
+
+  li[data-group='extra']:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  li[data-group='extra']:nth-child(2) {
+    animation-delay: 40ms;
+  }
+  li[data-group='extra']:nth-child(3) {
+    animation-delay: 80ms;
+  }
+  li[data-group='extra']:nth-child(5) {
+    animation-delay: 120ms;
+  }
+  li[data-group='extra']:nth-child(6) {
+    animation-delay: 160ms;
+  }
+  li[data-group='extra']:nth-child(7) {
+    animation-delay: 200ms;
+  }
+
+  @keyframes menu-item-fade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes control-pop {
+    0% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(64, 175, 255, 0));
+    }
+    45% {
+      transform: scale(1.22);
+      filter: drop-shadow(0 0 6px rgba(64, 175, 255, 0.7));
+    }
+    100% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(64, 175, 255, 0));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-control='camera'] [data-control='menu'] button svg,
+    li[data-group='extra']:not(.hidden),
+    #preloader span {
+      animation: none;
+    }
+  }
+
+  /* =========================================================================
+   JOVI — Configurações da Câmera & Galeria (Fotos / Álbuns)
+   Baseado no design de referência (PDF). Paleta preto + azul de destaque.
+   Tailwind cuida apenas do layout/responsivo (flex, grid, breakpoints);
+   aqui ficam os componentes customizados (switches, abas, cartões de
+   álbum, pills e barra de busca com IA).
+   ========================================================================= */
+
+  :root {
+    --preto: #000000;
+    --cartao: #17171a;
+    --superficie: #2f2f2f;
+    --claro: #dddddd;
+    --icone-escuro: #1c1c1e;
+    --divisor: rgba(255, 255, 255, 0.12);
+    --texto: #ffffff;
+    --texto-suave: #9a9aa5;
+    --azul: #40afff;
+    --azul-fundo: linear-gradient(180deg, #4d6b80 0%, #1c3040 100%);
+    --switch-off: #646368;
+    --transicao: 0.3s ease;
+  }
+
+  body.tela-preta {
+    background-color: var(--preto);
+    color: var(--texto);
+    font-family: 'Baloo 2', 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================ ÍCONES / BOTÕES REDONDOS ================= */
+
+  /* botão de voltar: apenas o ícone, sem fundo, como na referência */
+  .botao-voltar {
+    background: transparent;
+    color: var(--claro);
+    transition: opacity var(--transicao);
+  }
+
+  .botao-voltar:hover {
+    opacity: 0.7;
+  }
+
+  /* menu e busca: círculo claro com ícone escuro */
+  .botao-menu,
+  .botao-busca {
+    background: var(--claro);
+    color: var(--icone-escuro);
+    transition: background-color var(--transicao);
+  }
+
+  .botao-menu:hover,
+  .botao-busca:hover {
+    background: #ffffff;
+  }
+
+  .icone-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .icone-menu span {
+    display: block;
+    height: 2px;
+    background: var(--icone-escuro);
+    border-radius: 2px;
+  }
+
+  .icone-menu span:nth-child(1) {
+    width: 16px;
+  }
+
+  .icone-menu span:nth-child(2) {
+    width: 12px;
+  }
+
+  .icone-menu span:nth-child(3) {
+    width: 8px;
+  }
+
+  .titulo-tela {
+    color: var(--texto);
+  }
+
+  /* ================================ ABAS (CSS-only) ======================= */
+
+  .aba-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .aba-rotulo {
+    color: var(--texto);
+    cursor: pointer;
+    padding-bottom: 4px;
+    border-bottom: 2.5px solid transparent;
+    transition:
+      color var(--transicao),
+      border-color var(--transicao);
+  }
+
+  .aba-input:checked + .aba-rotulo {
+    color: var(--azul);
+    border-bottom-color: var(--azul);
+  }
+
+  .aba-input:focus-visible + .aba-rotulo {
+    outline: 2px solid var(--azul);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* painéis controlados pelas abas via :has() */
+  .painel-albuns {
+    display: none;
+  }
+
+  .app-galeria:has(#aba-albuns:checked) .painel-fotos {
+    display: none;
+  }
+
+  .app-galeria:has(#aba-albuns:checked) .painel-albuns {
+    display: block;
+  }
+
+  /* ======================= CONFIGURAÇÕES DA CÂMERA ======================== */
+
+  .cartao-config {
+    background: var(--cartao);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  .linha-config {
+    border-bottom: 1px solid var(--divisor);
+    transition: background-color var(--transicao);
+  }
+
+  .linha-config:last-child {
+    border-bottom: none;
+  }
+
+  /* leve destaque ao passar o mouse sobre a linha */
+  .linha-config:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .rotulo-config {
+    color: var(--texto);
+    cursor: pointer;
+  }
+
+  .descricao-config {
+    color: var(--texto-suave);
+  }
+
+  /* --- switch customizado (checkbox escondido + label estilizada) --- */
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 27px;
+    cursor: pointer;
+  }
+
+  .switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch .slider {
+    position: absolute;
+    inset: 0;
+    background-color: var(--switch-off);
+    border-radius: 999px;
+    transition: background-color var(--transicao);
+  }
+
+  .switch .slider::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 21px;
+    height: 21px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    transition: transform var(--transicao);
+  }
+
+  .switch input:checked + .slider {
+    background: var(--azul);
+  }
+
+  .switch input:checked + .slider::before {
+    transform: translateX(19px);
+  }
+
+  .switch input:focus-visible + .slider {
+    outline: 2px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  /* ================================ GRADE DE FOTOS ========================= */
+
+  .foto-item {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--cartao);
+  }
+
+  .foto-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: fadeInFoto 0.5s ease both;
+  }
+
+  /* efeito de fade-in para simular fluidez de carregamento */
+  @keyframes fadeInFoto {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .foto-item:nth-child(1) img {
+    animation-delay: 0.02s;
+  }
+
+  .foto-item:nth-child(2) img {
+    animation-delay: 0.05s;
+  }
+
+  .foto-item:nth-child(3) img {
+    animation-delay: 0.08s;
+  }
+
+  .foto-item:nth-child(4) img {
+    animation-delay: 0.11s;
+  }
+
+  .foto-item:nth-child(5) img {
+    animation-delay: 0.14s;
+  }
+
+  .foto-item:nth-child(6) img {
+    animation-delay: 0.17s;
+  }
+
+  .foto-item:nth-child(7) img {
+    animation-delay: 0.2s;
+  }
+
+  .foto-item:nth-child(8) img {
+    animation-delay: 0.23s;
+  }
+
+  .foto-item:nth-child(9) img {
+    animation-delay: 0.26s;
+  }
+
+  .foto-item:nth-child(10) img {
+    animation-delay: 0.29s;
+  }
+
+  .foto-item:nth-child(11) img {
+    animation-delay: 0.32s;
+  }
+
+  .foto-item:nth-child(12) img {
+    animation-delay: 0.35s;
+  }
+
+  .foto-item:nth-child(13) img {
+    animation-delay: 0.38s;
+  }
+
+  .foto-item:nth-child(14) img {
+    animation-delay: 0.41s;
+  }
+
+  .foto-item:nth-child(15) img {
+    animation-delay: 0.44s;
+  }
+
+  .foto-item:nth-child(16) img {
+    animation-delay: 0.47s;
+  }
+
+  .foto-item:nth-child(17) img {
+    animation-delay: 0.5s;
+  }
+
+  .foto-item:nth-child(18) img {
+    animation-delay: 0.53s;
+  }
+
+  .foto-item:nth-child(19) img {
+    animation-delay: 0.56s;
+  }
+
+  .foto-item:nth-child(20) img {
+    animation-delay: 0.59s;
+  }
+
+  .contagem-itens {
+    color: var(--texto-suave);
+  }
+
+  /* =============================== PILLS DE FILTRO ========================= */
+
+  .lista-pills {
+    list-style: none;
+    margin: 0;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    scrollbar-width: none;
+  }
+
+  .lista-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pill {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: linear-gradient(180deg, #5c5c5c 0%, #303030 100%);
+    color: var(--texto);
+    border: none;
+    transition:
+      background var(--transicao),
+      color var(--transicao);
+  }
+
+  .pill-ativo {
+    background: var(--azul-fundo);
+    color: #ffffff;
+  }
+
+  .pill:active {
+    filter: brightness(0.9);
+  }
+
+  /* ================================ CARTÕES DE ÁLBUM ======================= */
+
+  .grade-albuns {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cartao-album {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--cartao);
+    transition:
+      transform var(--transicao),
+      box-shadow var(--transicao);
+  }
+
+  /* :not(:target) evita que o transform do hover crie um novo bloco de
+   contenção para o .album-conteudo (position:fixed) quando o álbum está
+   aberto — isso quebraria o overlay de tela cheia. */
+  .cartao-album:not(:target):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  }
+
+  .album-capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transicao);
+  }
+
+  .cartao-album:not(:target):hover .album-capa img {
+    transform: scale(1.05);
+  }
+
+  .sombra-album {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 45%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
+    pointer-events: none;
+  }
+
+  .texto-album {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nome-album {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .contagem-album {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.78rem;
+  }
+
+  /* =============== ABRIR FOTO EM TELA CHEIA (CSS-only, checkbox) =========== */
+
+  .visor-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .foto-miniatura {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .visor-foto {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    cursor: zoom-out;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transicao),
+      visibility 0s linear var(--transicao);
+  }
+
+  .visor-input:checked ~ .visor-foto {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--transicao),
+      visibility 0s linear 0s;
+  }
+
+  .visor-foto img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .botao-fechar-visor {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  .botao-apagar-destaque {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+    background: rgba(239, 68, 68, 0.18);
+    color: #ffffff;
+    border: 1px solid rgba(248, 113, 113, 0.7);
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition:
+      background-color var(--transicao),
+      transform var(--transicao);
+  }
+
+  .botao-apagar-destaque:hover {
+    background: rgba(239, 68, 68, 0.28);
+    transform: translateY(-1px);
+  }
+
+  /* ================ ABRIR ÁLBUM EM TELA CHEIA (CSS-only, :target) ========== */
+
+  .album-capa {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .album-conteudo {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    overflow-y: auto;
+    background: var(--preto);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transicao),
+      visibility 0s linear var(--transicao);
+  }
+
+  .cartao-album:target .album-conteudo {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--transicao),
+      visibility 0s linear 0s;
+  }
+
+  /* ========================= BUSCA E ORGANIZAÇÃO COM IA ==================== */
+
+  .botao-organizar-ia {
+    background: var(--azul-fundo);
+    color: #ffffff;
+    border: none;
+    transition:
+      filter var(--transicao),
+      transform var(--transicao);
+  }
+
+  .botao-organizar-ia:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+  }
+
+  .botao-organizar-ia:active {
+    filter: brightness(0.9);
+    transform: translateY(0);
+  }
+
+  .input-busca-ia {
+    background: var(--superficie);
+    border: 1px solid var(--divisor);
+    color: var(--texto);
+    transition:
+      border-color var(--transicao),
+      box-shadow var(--transicao);
+  }
+
+  .input-busca-ia::placeholder {
+    color: var(--texto-suave);
+  }
+
+  .input-busca-ia:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(64, 175, 255, 0.25);
+  }
+
+  /* ========================= SELEÇÃO DE FOTOS ====================== */
+  .foto-item {
+    position: relative;
+  }
+
+  .foto-item.selecionada::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--azul);
+    background-color: rgba(64, 175, 255, 0.2);
+    pointer-events: none;
+    border-radius: 2px;
+  }
+
+  .foto-item.selecionada img {
+    transform: scale(0.9);
+    transition: transform var(--transicao);
+    border-radius: 4px;
+  }
+
+  .barra-ativa {
+    transform: translateY(0) !important;
+  }
+
+  /* ==================================== RESPONSIVO ========================= */
+
+  @media (min-width: 1024px) {
+    .app-galeria main,
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .grade-fotos {
+      border-radius: 18px;
+      overflow: hidden;
+    }
+  }
+}

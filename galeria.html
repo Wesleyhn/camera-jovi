@@ -1,0 +1,3575 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Galeria · JOVI</title>
+    <meta
+      name="description"
+      content="JOVI — galeria inteligente com fotos e álbuns organizados por IA." />
+
+    <!-- Tailwind CSS via CDN — usado para o grid, flexbox, espaçamentos e
+         breakpoints responsivos (mobile-first). O CSS customizado em
+         style.css cuida das abas, cartões de álbum e da barra de IA. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="./src/assets/css/galeria.css" />
+  </head>
+  <body class="tela-preta min-h-screen">
+    <div class="app-galeria">
+      <!-- ===================== TOPO: MENU · ABAS · BUSCA ===================== -->
+      <header
+        class="cabecalho-galeria flex items-center justify-between gap-2 px-4 pt-6 pb-3 sm:px-8">
+        <!-- JS: futuramente este botão deve abrir um menu lateral;
+                 por ora ele leva diretamente para a tela de Configurações. -->
+        <a
+          href="configuracoes.html"
+          class="botao-menu flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full"
+          aria-label="Abrir configurações da câmera">
+          <span class="icone-menu" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+        </a>
+
+        <!-- Abas "Fotos" / "Álbuns" — puramente CSS, via radio escondido -->
+        <nav
+          class="abas-galeria flex items-center gap-8"
+          aria-label="Seções da galeria">
+          <input
+            type="radio"
+            name="aba-galeria"
+            id="aba-fotos"
+            class="aba-input"
+            checked />
+          <label
+            for="aba-fotos"
+            class="aba-rotulo text-xl font-semibold sm:text-2xl"
+            >Fotos</label
+          >
+          <input
+            type="radio"
+            name="aba-galeria"
+            id="aba-albuns"
+            class="aba-input" />
+          <label
+            for="aba-albuns"
+            class="aba-rotulo text-xl font-semibold sm:text-2xl"
+            >Álbuns</label
+          >
+        </nav>
+
+        <!-- JS: futuramente deve focar/expandir o campo de busca com IA -->
+        <button
+          type="button"
+          class="botao-busca flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full"
+          aria-label="Buscar">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle
+              cx="11"
+              cy="11"
+              r="7"
+              stroke="currentColor"
+              stroke-width="2.2" />
+            <path
+              d="M21 21L16.5 16.5"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round" />
+          </svg>
+        </button>
+      </header>
+
+      <main class="pb-8">
+        <!-- =============================================================
+                 PAINEL "FOTOS" — grade de miniaturas
+                 ============================================================= -->
+        <section class="painel-fotos">
+          <!-- JS: futuramente exibir um efeito de "skeleton loading" (placeholders
+                     animados) enquanto as imagens reais carregam. Por enquanto as imagens
+                     já são exibidas diretamente, apenas com um fade-in em CSS. -->
+          <ul
+            class="grade-fotos grid grid-cols-4 gap-[3px]"
+            id="grade-fotos-recentes">
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-1" class="visor-input" />
+              <label for="foto-a-1" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/1/200/200"
+                  alt="Foto 1"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-1" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/1/900/900"
+                  alt="Foto 1 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-2" class="visor-input" />
+              <label for="foto-a-2" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/2/200/200"
+                  alt="Foto 2"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-2" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/2/900/900"
+                  alt="Foto 2 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-3" class="visor-input" />
+              <label for="foto-a-3" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/3/200/200"
+                  alt="Foto 3"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-3" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/3/900/900"
+                  alt="Foto 3 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-4" class="visor-input" />
+              <label for="foto-a-4" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/4/200/200"
+                  alt="Foto 4"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-4" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/4/900/900"
+                  alt="Foto 4 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-5" class="visor-input" />
+              <label for="foto-a-5" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/5/200/200"
+                  alt="Foto 5"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-5" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/5/900/900"
+                  alt="Foto 5 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-6" class="visor-input" />
+              <label for="foto-a-6" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/6/200/200"
+                  alt="Foto 6"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-6" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/6/900/900"
+                  alt="Foto 6 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-7" class="visor-input" />
+              <label for="foto-a-7" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/7/200/200"
+                  alt="Foto 7"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-7" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/7/900/900"
+                  alt="Foto 7 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-8" class="visor-input" />
+              <label for="foto-a-8" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/8/200/200"
+                  alt="Foto 8"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-8" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/8/900/900"
+                  alt="Foto 8 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-9" class="visor-input" />
+              <label for="foto-a-9" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/9/200/200"
+                  alt="Foto 9"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label for="foto-a-9" class="visor-foto" aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/9/900/900"
+                  alt="Foto 9 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-10" class="visor-input" />
+              <label for="foto-a-10" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/10/200/200"
+                  alt="Foto 10"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-10"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/10/900/900"
+                  alt="Foto 10 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-11" class="visor-input" />
+              <label for="foto-a-11" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/11/200/200"
+                  alt="Foto 11"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-11"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/11/900/900"
+                  alt="Foto 11 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-12" class="visor-input" />
+              <label for="foto-a-12" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/12/200/200"
+                  alt="Foto 12"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-12"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/12/900/900"
+                  alt="Foto 12 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-13" class="visor-input" />
+              <label for="foto-a-13" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/13/200/200"
+                  alt="Foto 13"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-13"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/13/900/900"
+                  alt="Foto 13 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-14" class="visor-input" />
+              <label for="foto-a-14" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/14/200/200"
+                  alt="Foto 14"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-14"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/14/900/900"
+                  alt="Foto 14 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-15" class="visor-input" />
+              <label for="foto-a-15" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/15/200/200"
+                  alt="Foto 15"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-15"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/15/900/900"
+                  alt="Foto 15 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-16" class="visor-input" />
+              <label for="foto-a-16" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/16/200/200"
+                  alt="Foto 16"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-16"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/16/900/900"
+                  alt="Foto 16 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-17" class="visor-input" />
+              <label for="foto-a-17" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/17/200/200"
+                  alt="Foto 17"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-17"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/17/900/900"
+                  alt="Foto 17 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-18" class="visor-input" />
+              <label for="foto-a-18" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/18/200/200"
+                  alt="Foto 18"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-18"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/18/900/900"
+                  alt="Foto 18 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-19" class="visor-input" />
+              <label for="foto-a-19" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/19/200/200"
+                  alt="Foto 19"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-19"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/19/900/900"
+                  alt="Foto 19 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+            <li class="foto-item">
+              <input type="checkbox" id="foto-a-20" class="visor-input" />
+              <label for="foto-a-20" class="foto-miniatura">
+                <img
+                  src="https://picsum.photos/seed/20/200/200"
+                  alt="Foto 20"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+              <label
+                for="foto-a-20"
+                class="visor-foto"
+                aria-label="Fechar foto">
+                <span class="botao-fechar-visor" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 6L18 18M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round" />
+                  </svg>
+                </span>
+                <img
+                  src="https://picsum.photos/seed/20/900/900"
+                  alt="Foto 20 ampliada"
+                  loading="lazy"
+                  decoding="async" />
+              </label>
+            </li>
+          </ul>
+
+          <p class="contagem-itens px-5 pt-4 text-sm sm:px-8">
+            Você possui 5.000 itens.
+          </p>
+
+          <!-- JS: cada pill deve filtrar a grade acima ao ser clicada -->
+          <ul
+            class="lista-pills flex gap-2.5 overflow-x-auto px-5 pb-1 pt-3 sm:px-8">
+            <li class="pill pill-ativo">Todos</li>
+            <li class="pill">Favoritos</li>
+            <li class="pill">Fotos</li>
+            <li class="pill">Vídeos</li>
+            <li class="pill">Capturas de tela</li>
+          </ul>
+        </section>
+
+        <!-- =============================================================
+                 PAINEL "ÁLBUNS" — grade de álbuns
+                 ============================================================= -->
+        <section class="painel-albuns px-5 sm:px-8">
+          <!-- JS: clicar em um álbum deve abrir a grade de fotos daquele álbum -->
+          <ul
+            class="grade-albuns grid grid-cols-2 gap-4 pt-1"
+            id="lista-albuns">
+            <li class="cartao-album" id="album-recentes">
+              <a
+                href="#album-recentes"
+                class="album-capa"
+                aria-label="Abrir álbum Recentes">
+                <img
+                  src="https://picsum.photos/seed/album-recentes/400/500"
+                  alt="Álbum Recentes"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Recentes</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Recentes
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-1"
+                      class="visor-input" />
+                    <label for="foto-recentes-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-1/200/200"
+                        alt="Recentes 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-1/900/900"
+                        alt="Recentes 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-2"
+                      class="visor-input" />
+                    <label for="foto-recentes-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-2/200/200"
+                        alt="Recentes 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-2/900/900"
+                        alt="Recentes 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-3"
+                      class="visor-input" />
+                    <label for="foto-recentes-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-3/200/200"
+                        alt="Recentes 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-3/900/900"
+                        alt="Recentes 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-4"
+                      class="visor-input" />
+                    <label for="foto-recentes-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-4/200/200"
+                        alt="Recentes 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-4/900/900"
+                        alt="Recentes 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-5"
+                      class="visor-input" />
+                    <label for="foto-recentes-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-5/200/200"
+                        alt="Recentes 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-5/900/900"
+                        alt="Recentes 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-6"
+                      class="visor-input" />
+                    <label for="foto-recentes-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-6/200/200"
+                        alt="Recentes 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-6/900/900"
+                        alt="Recentes 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-7"
+                      class="visor-input" />
+                    <label for="foto-recentes-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-7/200/200"
+                        alt="Recentes 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-7/900/900"
+                        alt="Recentes 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-recentes-8"
+                      class="visor-input" />
+                    <label for="foto-recentes-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-8/200/200"
+                        alt="Recentes 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-recentes-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-recentes-8/900/900"
+                        alt="Recentes 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-favoritas">
+              <a
+                href="#album-favoritas"
+                class="album-capa"
+                aria-label="Abrir álbum Favoritas">
+                <img
+                  src="https://picsum.photos/seed/album-favoritas/400/500"
+                  alt="Álbum Favoritas"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Favoritas</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Favoritas
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-1"
+                      class="visor-input" />
+                    <label for="foto-favoritas-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-1/200/200"
+                        alt="Favoritas 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-1/900/900"
+                        alt="Favoritas 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-2"
+                      class="visor-input" />
+                    <label for="foto-favoritas-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-2/200/200"
+                        alt="Favoritas 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-2/900/900"
+                        alt="Favoritas 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-3"
+                      class="visor-input" />
+                    <label for="foto-favoritas-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-3/200/200"
+                        alt="Favoritas 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-3/900/900"
+                        alt="Favoritas 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-4"
+                      class="visor-input" />
+                    <label for="foto-favoritas-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-4/200/200"
+                        alt="Favoritas 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-4/900/900"
+                        alt="Favoritas 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-5"
+                      class="visor-input" />
+                    <label for="foto-favoritas-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-5/200/200"
+                        alt="Favoritas 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-5/900/900"
+                        alt="Favoritas 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-6"
+                      class="visor-input" />
+                    <label for="foto-favoritas-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-6/200/200"
+                        alt="Favoritas 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-6/900/900"
+                        alt="Favoritas 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-7"
+                      class="visor-input" />
+                    <label for="foto-favoritas-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-7/200/200"
+                        alt="Favoritas 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-7/900/900"
+                        alt="Favoritas 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-favoritas-8"
+                      class="visor-input" />
+                    <label for="foto-favoritas-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-8/200/200"
+                        alt="Favoritas 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-favoritas-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-favoritas-8/900/900"
+                        alt="Favoritas 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-animais">
+              <a
+                href="#album-animais"
+                class="album-capa"
+                aria-label="Abrir álbum Animais">
+                <img
+                  src="https://picsum.photos/seed/album-animais/400/500"
+                  alt="Álbum Animais"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Animais</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Animais
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-1"
+                      class="visor-input" />
+                    <label for="foto-animais-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-1/200/200"
+                        alt="Animais 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-1/900/900"
+                        alt="Animais 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-2"
+                      class="visor-input" />
+                    <label for="foto-animais-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-2/200/200"
+                        alt="Animais 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-2/900/900"
+                        alt="Animais 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-3"
+                      class="visor-input" />
+                    <label for="foto-animais-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-3/200/200"
+                        alt="Animais 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-3/900/900"
+                        alt="Animais 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-4"
+                      class="visor-input" />
+                    <label for="foto-animais-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-4/200/200"
+                        alt="Animais 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-4/900/900"
+                        alt="Animais 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-5"
+                      class="visor-input" />
+                    <label for="foto-animais-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-5/200/200"
+                        alt="Animais 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-5/900/900"
+                        alt="Animais 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-6"
+                      class="visor-input" />
+                    <label for="foto-animais-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-6/200/200"
+                        alt="Animais 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-6/900/900"
+                        alt="Animais 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-7"
+                      class="visor-input" />
+                    <label for="foto-animais-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-7/200/200"
+                        alt="Animais 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-7/900/900"
+                        alt="Animais 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-animais-8"
+                      class="visor-input" />
+                    <label for="foto-animais-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-animais-8/200/200"
+                        alt="Animais 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-animais-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-animais-8/900/900"
+                        alt="Animais 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-natureza">
+              <a
+                href="#album-natureza"
+                class="album-capa"
+                aria-label="Abrir álbum Natureza">
+                <img
+                  src="https://picsum.photos/seed/album-natureza/400/500"
+                  alt="Álbum Natureza"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Natureza</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Natureza
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-1"
+                      class="visor-input" />
+                    <label for="foto-natureza-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-1/200/200"
+                        alt="Natureza 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-1/900/900"
+                        alt="Natureza 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-2"
+                      class="visor-input" />
+                    <label for="foto-natureza-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-2/200/200"
+                        alt="Natureza 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-2/900/900"
+                        alt="Natureza 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-3"
+                      class="visor-input" />
+                    <label for="foto-natureza-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-3/200/200"
+                        alt="Natureza 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-3/900/900"
+                        alt="Natureza 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-4"
+                      class="visor-input" />
+                    <label for="foto-natureza-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-4/200/200"
+                        alt="Natureza 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-4/900/900"
+                        alt="Natureza 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-5"
+                      class="visor-input" />
+                    <label for="foto-natureza-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-5/200/200"
+                        alt="Natureza 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-5/900/900"
+                        alt="Natureza 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-6"
+                      class="visor-input" />
+                    <label for="foto-natureza-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-6/200/200"
+                        alt="Natureza 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-6/900/900"
+                        alt="Natureza 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-7"
+                      class="visor-input" />
+                    <label for="foto-natureza-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-7/200/200"
+                        alt="Natureza 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-7/900/900"
+                        alt="Natureza 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-natureza-8"
+                      class="visor-input" />
+                    <label for="foto-natureza-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-8/200/200"
+                        alt="Natureza 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-natureza-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-natureza-8/900/900"
+                        alt="Natureza 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-viagens">
+              <a
+                href="#album-viagens"
+                class="album-capa"
+                aria-label="Abrir álbum Viagens">
+                <img
+                  src="https://picsum.photos/seed/album-viagens/400/500"
+                  alt="Álbum Viagens"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Viagens</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Viagens
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-1"
+                      class="visor-input" />
+                    <label for="foto-viagens-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-1/200/200"
+                        alt="Viagens 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-1/900/900"
+                        alt="Viagens 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-2"
+                      class="visor-input" />
+                    <label for="foto-viagens-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-2/200/200"
+                        alt="Viagens 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-2/900/900"
+                        alt="Viagens 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-3"
+                      class="visor-input" />
+                    <label for="foto-viagens-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-3/200/200"
+                        alt="Viagens 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-3/900/900"
+                        alt="Viagens 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-4"
+                      class="visor-input" />
+                    <label for="foto-viagens-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-4/200/200"
+                        alt="Viagens 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-4/900/900"
+                        alt="Viagens 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-5"
+                      class="visor-input" />
+                    <label for="foto-viagens-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-5/200/200"
+                        alt="Viagens 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-5/900/900"
+                        alt="Viagens 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-6"
+                      class="visor-input" />
+                    <label for="foto-viagens-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-6/200/200"
+                        alt="Viagens 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-6/900/900"
+                        alt="Viagens 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-7"
+                      class="visor-input" />
+                    <label for="foto-viagens-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-7/200/200"
+                        alt="Viagens 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-7/900/900"
+                        alt="Viagens 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-viagens-8"
+                      class="visor-input" />
+                    <label for="foto-viagens-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-8/200/200"
+                        alt="Viagens 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-viagens-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-viagens-8/900/900"
+                        alt="Viagens 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-videos">
+              <a
+                href="#album-videos"
+                class="album-capa"
+                aria-label="Abrir álbum Vídeos">
+                <img
+                  src="https://picsum.photos/seed/album-videos/400/500"
+                  alt="Álbum Vídeos"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Vídeos</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Vídeos
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-1"
+                      class="visor-input" />
+                    <label for="foto-videos-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-1/200/200"
+                        alt="Vídeos 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-1/900/900"
+                        alt="Vídeos 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-2"
+                      class="visor-input" />
+                    <label for="foto-videos-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-2/200/200"
+                        alt="Vídeos 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-2/900/900"
+                        alt="Vídeos 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-3"
+                      class="visor-input" />
+                    <label for="foto-videos-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-3/200/200"
+                        alt="Vídeos 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-3/900/900"
+                        alt="Vídeos 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-4"
+                      class="visor-input" />
+                    <label for="foto-videos-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-4/200/200"
+                        alt="Vídeos 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-4/900/900"
+                        alt="Vídeos 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-5"
+                      class="visor-input" />
+                    <label for="foto-videos-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-5/200/200"
+                        alt="Vídeos 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-5/900/900"
+                        alt="Vídeos 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-6"
+                      class="visor-input" />
+                    <label for="foto-videos-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-6/200/200"
+                        alt="Vídeos 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-6/900/900"
+                        alt="Vídeos 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-7"
+                      class="visor-input" />
+                    <label for="foto-videos-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-7/200/200"
+                        alt="Vídeos 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-7/900/900"
+                        alt="Vídeos 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-videos-8"
+                      class="visor-input" />
+                    <label for="foto-videos-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-videos-8/200/200"
+                        alt="Vídeos 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-videos-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-videos-8/900/900"
+                        alt="Vídeos 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-praia">
+              <a
+                href="#album-praia"
+                class="album-capa"
+                aria-label="Abrir álbum Praia">
+                <img
+                  src="https://picsum.photos/seed/album-praia/400/500"
+                  alt="Álbum Praia"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Praia</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Praia
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-1"
+                      class="visor-input" />
+                    <label for="foto-praia-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-1/200/200"
+                        alt="Praia 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-1/900/900"
+                        alt="Praia 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-2"
+                      class="visor-input" />
+                    <label for="foto-praia-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-2/200/200"
+                        alt="Praia 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-2/900/900"
+                        alt="Praia 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-3"
+                      class="visor-input" />
+                    <label for="foto-praia-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-3/200/200"
+                        alt="Praia 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-3/900/900"
+                        alt="Praia 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-4"
+                      class="visor-input" />
+                    <label for="foto-praia-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-4/200/200"
+                        alt="Praia 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-4/900/900"
+                        alt="Praia 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-5"
+                      class="visor-input" />
+                    <label for="foto-praia-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-5/200/200"
+                        alt="Praia 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-5/900/900"
+                        alt="Praia 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-6"
+                      class="visor-input" />
+                    <label for="foto-praia-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-6/200/200"
+                        alt="Praia 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-6/900/900"
+                        alt="Praia 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-7"
+                      class="visor-input" />
+                    <label for="foto-praia-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-7/200/200"
+                        alt="Praia 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-7/900/900"
+                        alt="Praia 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-praia-8"
+                      class="visor-input" />
+                    <label for="foto-praia-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-praia-8/200/200"
+                        alt="Praia 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-praia-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-praia-8/900/900"
+                        alt="Praia 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+            <li class="cartao-album" id="album-deserto">
+              <a
+                href="#album-deserto"
+                class="album-capa"
+                aria-label="Abrir álbum Deserto">
+                <img
+                  src="https://picsum.photos/seed/album-deserto/400/500"
+                  alt="Álbum Deserto"
+                  loading="lazy"
+                  decoding="async" />
+                <span class="sombra-album" aria-hidden="true"></span>
+                <span class="texto-album">
+                  <strong class="nome-album">Deserto</strong>
+                  <span class="contagem-album">625</span>
+                </span>
+              </a>
+              <div class="album-conteudo">
+                <header
+                  class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
+                  <a
+                    href="#"
+                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    aria-label="Fechar álbum">
+                    <svg
+                      width="22"
+                      height="18"
+                      viewBox="0 0 22 18"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M0.6 9.7c-.4-.4-.4-1 0-1.4L7.9.6c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L4.4 7H20c.6 0 1 .4 1 1s-.4 1-1 1H4.4l5 4.9c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.6 9.7z" />
+                    </svg>
+                  </a>
+                  <h1 class="titulo-tela text-lg font-bold sm:text-xl">
+                    Deserto
+                  </h1>
+                </header>
+                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-1"
+                      class="visor-input" />
+                    <label for="foto-deserto-1" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-1/200/200"
+                        alt="Deserto 1"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-1"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-1/900/900"
+                        alt="Deserto 1 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-2"
+                      class="visor-input" />
+                    <label for="foto-deserto-2" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-2/200/200"
+                        alt="Deserto 2"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-2"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-2/900/900"
+                        alt="Deserto 2 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-3"
+                      class="visor-input" />
+                    <label for="foto-deserto-3" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-3/200/200"
+                        alt="Deserto 3"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-3"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-3/900/900"
+                        alt="Deserto 3 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-4"
+                      class="visor-input" />
+                    <label for="foto-deserto-4" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-4/200/200"
+                        alt="Deserto 4"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-4"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-4/900/900"
+                        alt="Deserto 4 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-5"
+                      class="visor-input" />
+                    <label for="foto-deserto-5" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-5/200/200"
+                        alt="Deserto 5"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-5"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-5/900/900"
+                        alt="Deserto 5 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-6"
+                      class="visor-input" />
+                    <label for="foto-deserto-6" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-6/200/200"
+                        alt="Deserto 6"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-6"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-6/900/900"
+                        alt="Deserto 6 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-7"
+                      class="visor-input" />
+                    <label for="foto-deserto-7" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-7/200/200"
+                        alt="Deserto 7"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-7"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-7/900/900"
+                        alt="Deserto 7 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                  <li class="foto-item">
+                    <input
+                      type="checkbox"
+                      id="foto-deserto-8"
+                      class="visor-input" />
+                    <label for="foto-deserto-8" class="foto-miniatura">
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-8/200/200"
+                        alt="Deserto 8"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                    <label
+                      for="foto-deserto-8"
+                      class="visor-foto"
+                      aria-label="Fechar foto">
+                      <span class="botao-fechar-visor" aria-hidden="true">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M6 6L18 18M18 6L6 18"
+                            stroke="currentColor"
+                            stroke-width="2.4"
+                            stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <img
+                        src="https://picsum.photos/seed/album-deserto-8/900/900"
+                        alt="Deserto 8 ampliada"
+                        loading="lazy"
+                        decoding="async" />
+                    </label>
+                  </li>
+                </ul>
+                <p class="contagem-itens px-5 pt-4 pb-8 text-sm sm:px-8">
+                  625 itens neste álbum.
+                </p>
+              </div>
+            </li>
+          </ul>
+
+          <p class="contagem-itens pt-4 text-sm">Você possui 8 álbuns.</p>
+
+          <!-- JS: cada pill deve filtrar a grade de álbuns acima ao ser clicada -->
+          <ul class="lista-pills flex gap-2.5 overflow-x-auto pb-1 pt-3">
+            <li class="pill pill-ativo">Pessoal</li>
+            <li class="pill">Compartilhado</li>
+          </ul>
+        </section>
+
+        <!-- =============================================================
+                 BUSCA / ORGANIZAÇÃO COM IA (comum às duas abas)
+                 ============================================================= -->
+        <div class="px-5 pt-5 sm:px-8">
+          <!-- JS: ao clicar, reordenar os álbuns/fotos por relevância da IA
+                     e exibir um toast de confirmação (ex.: "Organizado pela Jovi!") -->
+          <button
+            type="button"
+            id="btn-organizar-ia"
+            class="botao-organizar-ia mb-3 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold">
+            <span aria-hidden="true">✨</span>
+            Organizar por IA
+          </button>
+
+          <!-- JS: capturar o evento 'keypress' (tecla Enter) neste input para
+                     filtrar/organizar os álbuns e fotos acima com a IA da JOVI -->
+          <form
+            class="barra-busca-ia flex items-center"
+            action="#"
+            role="search">
+            <input
+              type="search"
+              id="busca-ia"
+              name="busca-ia"
+              class="input-busca-ia w-full rounded-full py-3 px-5 text-xs sm:text-sm"
+              placeholder="Digite o que deseja criar, procurar ou organizar com a IA da Jovi"
+              autocomplete="off" />
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <div
+      id="barra-acoes"
+      class="fixed bottom-0 left-0 w-full bg-[#17171a] border-t border-[rgba(255,255,255,0.12)] p-4 flex justify-between items-center z-[100] transform translate-y-full transition-transform duration-300">
+      <span id="contador-selecao" class="text-white font-semibold text-sm"
+        >0 selecionadas</span
+      >
+      <div class="flex gap-4">
+        <button
+          id="btn-compartilhar"
+          class="text-[#40afff] text-sm font-semibold">
+          Compartilhar
+        </button>
+        <button id="btn-mover" class="text-white text-sm font-semibold">
+          Mover
+        </button>
+        <button id="btn-apagar" class="text-red-500 text-sm font-semibold">
+          Apagar
+        </button>
+        <button
+          id="btn-cancelar"
+          class="text-gray-400 text-sm font-semibold ml-2">
+          Cancelar
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
