@@ -56,6 +56,30 @@ let cameraAtual = 'user';
 
 let filtroAtual = 'normal';
 
+/* TAMANHO DO VÍDEO (iOS costuma ignorar w-full/h-full em <video> com
+   srcObject até receber um tamanho explícito em pixels) */
+
+function redimensionarVideo() {
+  if (!video) return;
+
+  const largura = window.visualViewport?.width || window.innerWidth;
+  const altura = window.visualViewport?.height || window.innerHeight;
+
+  video.style.width = `${largura}px`;
+  video.style.height = `${altura}px`;
+}
+
+window.addEventListener('resize', redimensionarVideo);
+window.addEventListener('orientationchange', () => {
+  setTimeout(redimensionarVideo, 300);
+});
+
+if (video) {
+  video.addEventListener('loadedmetadata', redimensionarVideo);
+}
+
+redimensionarVideo();
+
 /* STATUS */
 
 function mudarStatus(texto) {
@@ -143,6 +167,8 @@ async function iniciarCamera() {
     video.srcObject = stream;
 
     await video.play();
+
+    redimensionarVideo();
 
     if (btnFoto) btnFoto.disabled = false;
 
