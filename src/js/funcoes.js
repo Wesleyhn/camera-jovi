@@ -51,6 +51,10 @@ bar.addEventListener('click', (event) => {
   const key = button.closest('li').dataset.control;
   state[key] = !state[key];
   render();
+
+  if (key === 'filtros' && typeof alternarFiltro === 'function') {
+    alternarFiltro();
+  }
 });
 
 const zoomBar = document.querySelector('[data-control="zoom"]');
@@ -62,11 +66,19 @@ zoomBar.addEventListener('click', (event) => {
     .querySelectorAll('span')
     .forEach((item) => item.classList.remove('zoom-ativo'));
   target.classList.add('zoom-ativo');
+
+  if (typeof definirZoom === 'function') {
+    definirZoom(Number(target.dataset.zoom));
+  }
 });
 
 const shutterIcon = document.getElementById('shutter-icon');
 const shutterBtn = document.getElementById('shutter-btn');
 const recordModes = ['video', 'cinematic'];
+
+function getCameraMode() {
+  return document.querySelector('[data-active]')?.dataset.mode || 'foto';
+}
 
 function updateShutter(mode) {
   const isRecordMode = recordModes.includes(mode);

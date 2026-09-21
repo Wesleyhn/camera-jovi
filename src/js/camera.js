@@ -4,7 +4,7 @@ const video = document.getElementById('webcam');
 
 const canvas = document.getElementById('photo-canvas');
 
-const preview = document.getElementById('preview-container');
+const previewImage = document.getElementById('preview-image');
 
 const status = document.getElementById('status');
 
@@ -209,7 +209,7 @@ async function tirarFoto() {
     return;
   }
 
-  const segundos = Number(temporizador.value);
+  const segundos = temporizador?.classList.contains('is-active') ? 3 : 0;
 
   if (segundos > 0) {
     await executarTemporizador(segundos);
@@ -235,29 +235,9 @@ async function tirarFoto() {
 /* CRIAR FOTO */
 
 function criarFoto(url) {
-  const container = document.createElement('div');
-
-  container.className = 'foto-container';
-
-  const img = document.createElement('img');
-
-  img.src = url;
-
-  const download = document.createElement('a');
-
-  download.href = url;
-
-  download.download = `foto-${Date.now()}.png`;
-
-  download.textContent = '⬇ Baixar foto';
-
-  download.className = 'btn-download';
-
-  container.appendChild(img);
-
-  container.appendChild(download);
-
-  preview.prepend(container);
+  if (previewImage) {
+    previewImage.src = url;
+  }
 }
 
 /* TEMPORIZADOR */
@@ -266,7 +246,7 @@ function executarTemporizador(segundos) {
   return new Promise((resolve) => {
     let restante = segundos;
 
-    contador.textContent = restante;
+    if (contador) contador.textContent = restante;
 
     const intervalo = setInterval(() => {
       restante--;
@@ -274,11 +254,11 @@ function executarTemporizador(segundos) {
       if (restante <= 0) {
         clearInterval(intervalo);
 
-        contador.textContent = '';
+        if (contador) contador.textContent = '';
 
         resolve();
       } else {
-        contador.textContent = restante;
+        if (contador) contador.textContent = restante;
       }
     }, 1000);
   });
@@ -296,9 +276,7 @@ function gravarVideo() {
   if (gravador && gravador.state === 'recording') {
     gravador.stop();
 
-    btnGravar.textContent = ' Gravar';
-
-    btnGravar.classList.remove('perigo');
+    if (shutterBtn) shutterBtn.classList.remove('is-recording');
 
     return;
   }
@@ -339,41 +317,23 @@ function gravarVideo() {
 
   gravador.start();
 
-  btnGravar.textContent = '⏹ Parar gravação';
-
-  btnGravar.classList.add('perigo');
+  if (shutterBtn) shutterBtn.classList.add('is-recording');
 }
 
 /* CRIAR VÍDEO */
 
 function criarVideo(url) {
-  const container = document.createElement('div');
+  if (previewImage && video.videoWidth && video.videoHeight) {
+    canvas.width = video.videoWidth;
 
-  container.className = 'video-container';
+    canvas.height = video.videoHeight;
 
-  const videoGravado = document.createElement('video');
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  videoGravado.src = url;
+    previewImage.src = canvas.toDataURL('image/png');
+  }
 
-  videoGravado.controls = true;
-
-  videoGravado.playsInline = true;
-
-  const download = document.createElement('a');
-
-  download.href = url;
-
-  download.download = `video-${Date.now()}.webm`;
-
-  download.textContent = '⬇ Baixar vídeo';
-
-  download.className = 'btn-download';
-
-  container.appendChild(videoGravado);
-
-  container.appendChild(download);
-
-  preview.prepend(container);
+  window.ultimoVideoGravado = url;
 }
 
 /* FLASH */
@@ -407,10 +367,6 @@ async function ativarFlash() {
         },
       ],
     });
-
-    if (btnTorch) {
-      btnTorch.textContent = !atual.torch ? ' Desligar' : ' Flash';
-    }
   } catch (erro) {
     console.error(erro);
 
@@ -426,14 +382,16 @@ function verificarFlash() {
   const track = stream.getVideoTracks()[0];
 
   if (!track.getCapabilities) {
-    btnTorch.disabled = true;
+    btnTorch.classList.add('opacity-40', 'pointer-events-none');
 
     return;
   }
 
   const capabilities = track.getCapabilities();
 
-  btnTorch.disabled = !capabilities.torch;
+  btnTorch.classList.toggle('opacity-40', !capabilities.torch);
+
+  btnTorch.classList.toggle('pointer-events-none', !capabilities.torch);
 }
 
 /* ALTERNAR CÂMERA */
@@ -484,6 +442,55 @@ function aplicarZoomDigital() {
   if (!video || !controleZoom) return;
 
   video.style.transform = `scale(${controleZoom.value})`;
+}
+
+/* ZOOM (botões 0,5x/1x/2x/5x) */
+
+async function definirZoom(valorZoom) {
+  if (!video) return;
+
+  if (!stream) {
+    video.style.transform = `scale(${valorZoom})`;
+
+    return;
+  }
+
+  const track = stream.getVideoTracks()[0];
+
+  if (!track || !track.getCapabilities) {
+    video.style.transform = `scale(${valorZoom})`;
+
+    return;
+  }
+
+  const capabilities = track.getCapabilities();
+
+  if (!capabilities.zoom) {
+    video.style.transform = `scale(${valorZoom})`;
+
+    return;
+  }
+
+  const valor = Math.min(
+    Math.max(valorZoom, capabilities.zoom.min),
+    capabilities.zoom.max,
+  );
+
+  try {
+    await track.applyConstraints({
+      advanced: [
+        {
+          zoom: valor,
+        },
+      ],
+    });
+
+    video.style.transform = 'none';
+  } catch (erro) {
+    console.error(erro);
+
+    video.style.transform = `scale(${valorZoom})`;
+  }
 }
 
 /* GRADE */
@@ -541,13 +548,22 @@ ${montarFiltro()}
 `;
 }
 
-/* BOTÕES FILTRO */
+/* CICLO DE FILTROS (botão único "Filtros") */
 
-botoesFiltro.forEach((botao) => {
-  botao.addEventListener('click', () => {
-    aplicarFiltro(botao.dataset.filtro);
-  });
-});
+const filtrosDisponiveis = [
+  'normal',
+  'grayscale(100%)',
+  'sepia(100%)',
+  'invert(100%)',
+];
+
+function alternarFiltro() {
+  const indiceAtual = filtrosDisponiveis.indexOf(filtroAtual);
+
+  const proximoIndice = (indiceAtual + 1) % filtrosDisponiveis.length;
+
+  aplicarFiltro(filtrosDisponiveis[proximoIndice]);
+}
 
 /* AJUSTES */
 
@@ -579,7 +595,18 @@ if (saturacao) {
 
 if (btnIniciar) btnIniciar.addEventListener('click', iniciarCamera);
 
-if (btnFoto) btnFoto.addEventListener('click', tirarFoto);
+if (btnFoto) {
+  btnFoto.addEventListener('click', () => {
+    const modo =
+      typeof getCameraMode === 'function' ? getCameraMode() : 'foto';
+
+    if (modo === 'video' || modo === 'cinematic') {
+      gravarVideo();
+    } else {
+      tirarFoto();
+    }
+  });
+}
 
 if (btnGravar) btnGravar.addEventListener('click', gravarVideo);
 

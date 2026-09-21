@@ -6,7 +6,7 @@
     <title>Câmera - Jovi</title>
     <link rel="stylesheet" href="src/output.css" />
   </head>
-  <body class="bg-black text-white">
+  <body class="text-white overflow-y-hidden">
     <!-- Preloader -->
     <div
       id="preloader"
@@ -18,9 +18,9 @@
     <!-- Câmera -->
     <main
       class="flex flex-col items-center justify-center min-h-screen absolute inset-0">
-      <div class="relative flex flex-col items-center">
+      <div class="absolute inset-0 flex flex-col items-center">
         <!-- Botão ajustes da câmera -->
-        <div class="relative z-10 top-15">
+        <div class="relative z-10 top-5">
           <div class="btn-liquid-glass px-3 py-3">
             <ul class="flex gap-6 px-1 items-center" data-control="camera">
               <li data-control="flash" data-group="extra" id="btn-torch">
@@ -200,7 +200,7 @@
                   </svg>
                 </button>
               </li>
-              <li data-control="filtros btn-filtro" data-group="extra">
+              <li data-control="filtros" data-group="extra">
                 <button type="button" aria-label="Filtros">
                   <svg
                     width="22"
@@ -307,7 +307,7 @@
           id="webcam"
           autoplay=""
           playsinline=""
-          class="-z-10 block h-screen w-screen object-cover"
+          class="absolute inset-0 -z-10 h-full w-full object-cover"
           muted=""
           style="
             filter: brightness(100%) contrast(100%) saturate(100%);
