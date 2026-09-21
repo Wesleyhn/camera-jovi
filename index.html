@@ -259,6 +259,55 @@
               </li>
             </ul>
           </div>
+
+          <!-- Opções de exposição -->
+          <div
+            id="exposicao-opcoes"
+            class="liquid-glass rounded-2xl hidden absolute left-1/2 top-full mt-3 w-64 -translate-x-1/2 px-5 py-4">
+            <div class="flex flex-col gap-4 text-xs font-light">
+              <label class="flex flex-col gap-1.5">
+                <span class="flex items-center justify-between">
+                  <span>Brilho</span>
+                  <span><span id="brilho-valor">100</span>%</span>
+                </span>
+                <input
+                  type="range"
+                  id="controle-brilho"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="w-full accent-destaque" />
+              </label>
+
+              <label class="flex flex-col gap-1.5">
+                <span class="flex items-center justify-between">
+                  <span>Contraste</span>
+                  <span><span id="contraste-valor">100</span>%</span>
+                </span>
+                <input
+                  type="range"
+                  id="controle-contraste"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="w-full accent-destaque" />
+              </label>
+
+              <label class="flex flex-col gap-1.5">
+                <span class="flex items-center justify-between">
+                  <span>Saturação</span>
+                  <span><span id="saturacao-valor">100</span>%</span>
+                </span>
+                <input
+                  type="range"
+                  id="controle-saturacao"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="w-full accent-destaque" />
+              </label>
+            </div>
+          </div>
         </div>
 
         <!-- Controles de zoom -->

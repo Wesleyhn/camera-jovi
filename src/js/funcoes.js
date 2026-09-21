@@ -20,6 +20,7 @@ const state = {
 
 let temporizadorSegundos = 0;
 let temporizadorSubmenuAberto = false;
+let exposicaoSubmenuAberto = false;
 
 function render() {
   bar.querySelectorAll('li[data-control]').forEach((item) => {
@@ -36,6 +37,11 @@ function render() {
   const temporizadorMenu = document.getElementById('temporizador-opcoes');
   if (temporizadorMenu) {
     temporizadorMenu.classList.toggle('hidden', !temporizadorSubmenuAberto);
+  }
+
+  const exposicaoMenu = document.getElementById('exposicao-opcoes');
+  if (exposicaoMenu) {
+    exposicaoMenu.classList.toggle('hidden', !exposicaoSubmenuAberto);
   }
 
   bar.querySelectorAll('[data-group="extra"]').forEach((item) => {
@@ -65,6 +71,15 @@ bar.addEventListener('click', (event) => {
 
   if (key === 'temporizador') {
     temporizadorSubmenuAberto = !temporizadorSubmenuAberto;
+    exposicaoSubmenuAberto = false;
+    render();
+    return;
+  }
+
+  if (key === 'exposicao') {
+    exposicaoSubmenuAberto = !exposicaoSubmenuAberto;
+    temporizadorSubmenuAberto = false;
+    state.exposicao = exposicaoSubmenuAberto;
     render();
     return;
   }
@@ -95,12 +110,28 @@ temporizadorMenu.addEventListener('click', (event) => {
 });
 
 document.addEventListener('click', (event) => {
-  if (!temporizadorSubmenuAberto) return;
-  if (event.target.closest('#temporizador-opcoes')) return;
-  if (event.target.closest('[data-control="temporizador"]')) return;
+  let precisaRenderizar = false;
 
-  temporizadorSubmenuAberto = false;
-  render();
+  if (
+    temporizadorSubmenuAberto &&
+    !event.target.closest('#temporizador-opcoes') &&
+    !event.target.closest('[data-control="temporizador"]')
+  ) {
+    temporizadorSubmenuAberto = false;
+    precisaRenderizar = true;
+  }
+
+  if (
+    exposicaoSubmenuAberto &&
+    !event.target.closest('#exposicao-opcoes') &&
+    !event.target.closest('[data-control="exposicao"]')
+  ) {
+    exposicaoSubmenuAberto = false;
+    state.exposicao = false;
+    precisaRenderizar = true;
+  }
+
+  if (precisaRenderizar) render();
 });
 
 const zoomBar = document.querySelector('[data-control="zoom"]');
