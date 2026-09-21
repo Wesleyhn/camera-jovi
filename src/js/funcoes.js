@@ -118,6 +118,13 @@ bar.addEventListener('click', (event) => {
   const action = button.dataset.control;
   if (action === 'menu-open' || action === 'menu-close') {
     state.menuOpen = action === 'menu-open';
+
+    if (typeof onehandAberto !== 'undefined' && onehandAberto) {
+      document
+        .getElementById('barra-ajustes')
+        ?.classList.toggle('hidden', !state.menuOpen);
+    }
+
     render();
     return;
   }
@@ -493,6 +500,7 @@ document.addEventListener('click', (event) => {
 
   if (!onehandAberto) return;
   if (event.target.closest('#onehand-circle')) return;
+  if (event.target.closest('#barra-ajustes')) return;
 
   fecharOneHand();
 });
@@ -560,11 +568,11 @@ onehandModos.forEach((botao) => {
   });
 });
 
-/* Ajustes: fecha o modo e abre o menu de ajustes normal */
+/* Ajustes: mantém o modo OneHand aberto e mostra apenas a barra de ajustes */
 if (onehandAjustes) {
   onehandAjustes.addEventListener('click', () => {
-    fecharOneHand();
-    state.menuOpen = true;
+    state.menuOpen = !state.menuOpen;
+    barraAjustes?.classList.toggle('hidden', !state.menuOpen);
     render();
   });
 }

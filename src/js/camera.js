@@ -38,6 +38,10 @@ const contrasteValor = document.getElementById('contraste-valor');
 
 const saturacaoValor = document.getElementById('saturacao-valor');
 
+const contadorGravacao = document.getElementById('contador-gravacao');
+
+const contadorGravacaoTexto = document.getElementById('contador-gravacao-texto');
+
 /* VARIÁVEIS */
 
 let stream = null;
@@ -47,6 +51,10 @@ let gravador = null;
 let partesVideo = [];
 
 let cameraAtual = 'environment';
+
+let gravacaoInicio = null;
+
+let gravacaoIntervalo = null;
 
 let filtroAtual = 'normal';
 
@@ -289,6 +297,46 @@ function executarTemporizador(segundos) {
   });
 }
 
+/* CONTADOR DE GRAVAÇÃO */
+
+function formatarTempoGravacao(ms) {
+  const totalSegundos = Math.floor(ms / 1000);
+
+  const minutos = Math.floor(totalSegundos / 60);
+
+  const segundos = totalSegundos % 60;
+
+  return `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+}
+
+function iniciarContadorGravacao() {
+  if (!contadorGravacao) return;
+
+  gravacaoInicio = Date.now();
+
+  if (contadorGravacaoTexto) contadorGravacaoTexto.textContent = '00:00';
+
+  contadorGravacao.classList.remove('hidden');
+
+  gravacaoIntervalo = setInterval(() => {
+    if (contadorGravacaoTexto) {
+      contadorGravacaoTexto.textContent = formatarTempoGravacao(
+        Date.now() - gravacaoInicio,
+      );
+    }
+  }, 500);
+}
+
+function pararContadorGravacao() {
+  clearInterval(gravacaoIntervalo);
+
+  gravacaoIntervalo = null;
+
+  gravacaoInicio = null;
+
+  if (contadorGravacao) contadorGravacao.classList.add('hidden');
+}
+
 /* GRAVAÇÃO */
 
 function gravarVideo() {
@@ -302,6 +350,8 @@ function gravarVideo() {
     gravador.stop();
 
     if (shutterBtn) shutterBtn.classList.remove('is-recording');
+
+    pararContadorGravacao();
 
     redimensionarVideo();
     setTimeout(redimensionarVideo, 300);
@@ -346,6 +396,8 @@ function gravarVideo() {
   gravador.start();
 
   if (shutterBtn) shutterBtn.classList.add('is-recording');
+
+  iniciarContadorGravacao();
 
   redimensionarVideo();
   setTimeout(redimensionarVideo, 300);
