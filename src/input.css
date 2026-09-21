@@ -14,6 +14,15 @@
 
   .btn-shutter {
     @apply bg-white rounded-full ring-[5px] ring-black/55 shadow-[0_2px_6px_rgba(0,0,0,0.4)];
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .onehand-hub {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   #grade-camera {

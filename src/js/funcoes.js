@@ -391,6 +391,11 @@ let onehandGestoAtivou = false;
 let onehandFechandoInicio = null;
 
 if (onehandShutterReal) {
+  /* Evita o menu nativo de "salvar imagem" durante o toque longo */
+  onehandShutterReal.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+  });
+
   onehandShutterReal.addEventListener('pointerdown', (event) => {
     if (onehandAberto) return;
     if (event.pointerType === 'mouse' && event.button !== 0) return;
