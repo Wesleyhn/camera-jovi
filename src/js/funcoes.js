@@ -18,6 +18,9 @@ const state = {
   menuOpen: false,
 };
 
+let temporizadorSegundos = 0;
+let temporizadorSubmenuAberto = false;
+
 function render() {
   bar.querySelectorAll('li[data-control]').forEach((item) => {
     const key = item.dataset.control;
@@ -28,6 +31,11 @@ function render() {
   const gradeOverlay = document.getElementById('grade-camera');
   if (gradeOverlay) {
     gradeOverlay.classList.toggle('hidden', !state.grade);
+  }
+
+  const temporizadorMenu = document.getElementById('temporizador-opcoes');
+  if (temporizadorMenu) {
+    temporizadorMenu.classList.toggle('hidden', !temporizadorSubmenuAberto);
   }
 
   bar.querySelectorAll('[data-group="extra"]').forEach((item) => {
@@ -54,12 +62,45 @@ bar.addEventListener('click', (event) => {
   }
 
   const key = button.closest('li').dataset.control;
+
+  if (key === 'temporizador') {
+    temporizadorSubmenuAberto = !temporizadorSubmenuAberto;
+    render();
+    return;
+  }
+
   state[key] = !state[key];
   render();
 
   if (key === 'filtros' && typeof alternarFiltro === 'function') {
     alternarFiltro();
   }
+});
+
+const temporizadorMenu = document.getElementById('temporizador-opcoes');
+temporizadorMenu.addEventListener('click', (event) => {
+  const opcao = event.target.closest('li');
+  if (!opcao) return;
+
+  temporizadorSegundos = Number(opcao.dataset.segundos);
+  state.temporizador = temporizadorSegundos > 0;
+  temporizadorSubmenuAberto = false;
+
+  temporizadorMenu
+    .querySelectorAll('li')
+    .forEach((item) => item.classList.remove('text-destaque'));
+  opcao.classList.add('text-destaque');
+
+  render();
+});
+
+document.addEventListener('click', (event) => {
+  if (!temporizadorSubmenuAberto) return;
+  if (event.target.closest('#temporizador-opcoes')) return;
+  if (event.target.closest('[data-control="temporizador"]')) return;
+
+  temporizadorSubmenuAberto = false;
+  render();
 });
 
 const zoomBar = document.querySelector('[data-control="zoom"]');

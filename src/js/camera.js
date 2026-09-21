@@ -20,8 +20,6 @@ const btnMudar = document.getElementById('btn-alternar');
 
 const botoesFiltro = document.querySelectorAll('.btn-filtro');
 
-const temporizador = document.getElementById('temporizador');
-
 const contador = document.getElementById('contador-temporizador');
 
 const controleZoom = document.getElementById('controle-zoom');
@@ -231,7 +229,8 @@ async function tirarFoto() {
     return;
   }
 
-  const segundos = temporizador?.classList.contains('is-active') ? 3 : 0;
+  const segundos =
+    typeof temporizadorSegundos === 'number' ? temporizadorSegundos : 0;
 
   if (segundos > 0) {
     await executarTemporizador(segundos);
