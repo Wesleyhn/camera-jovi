@@ -279,7 +279,10 @@ function executarTemporizador(segundos) {
   return new Promise((resolve) => {
     let restante = segundos;
 
-    if (contador) contador.textContent = restante;
+    if (contador) {
+      contador.textContent = restante;
+      contador.classList.remove('hidden');
+    }
 
     const intervalo = setInterval(() => {
       restante--;
@@ -287,7 +290,10 @@ function executarTemporizador(segundos) {
       if (restante <= 0) {
         clearInterval(intervalo);
 
-        if (contador) contador.textContent = '';
+        if (contador) {
+          contador.textContent = '';
+          contador.classList.add('hidden');
+        }
 
         resolve();
       } else {
