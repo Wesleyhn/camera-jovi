@@ -416,7 +416,19 @@ document.addEventListener('pointerup', () => {
 });
 
 /* Fechar: tocar fora do círculo */
+let onehandIgnorarProximoClique = false;
+
+function onehandClicarSemFechar(elemento) {
+  onehandIgnorarProximoClique = true;
+  elemento?.click();
+}
+
 document.addEventListener('click', (event) => {
+  if (onehandIgnorarProximoClique) {
+    onehandIgnorarProximoClique = false;
+    return;
+  }
+
   if (!onehandAberto) return;
   if (event.target.closest('#onehand-circle')) return;
 
@@ -444,7 +456,7 @@ if (onehandCircle) {
 /* Obturador (reaproveita a lógica real de foto/vídeo) */
 if (onehandShutter) {
   onehandShutter.addEventListener('click', () => {
-    document.getElementById('btn-foto')?.click();
+    onehandClicarSemFechar(document.getElementById('btn-foto'));
   });
 }
 
@@ -477,9 +489,11 @@ if (shutterBtn) {
 /* Modos rápidos (Video/Foto/Retrato) */
 onehandModos.forEach((botao) => {
   botao.addEventListener('click', () => {
-    document
-      .querySelector(`#camera-modes [data-mode="${botao.dataset.mode}"]`)
-      ?.click();
+    onehandClicarSemFechar(
+      document.querySelector(
+        `#camera-modes [data-mode="${botao.dataset.mode}"]`,
+      ),
+    );
     sincronizarModoOneHand();
   });
 });
