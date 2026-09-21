@@ -25,6 +25,10 @@
     user-select: none;
   }
 
+  .tutorial-passo {
+    @apply absolute inset-0;
+  }
+
   #grade-camera {
     background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px),

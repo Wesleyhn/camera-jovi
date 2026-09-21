@@ -6,6 +6,49 @@ window.setTimeout(() => {
   });
 }, 1400);
 
+/* TUTORIAL DE INTRODUÇÃO */
+
+const tutorial = document.getElementById('tutorial');
+const TOTAL_PASSOS_TUTORIAL = 6;
+let passoTutorialAtual = 1;
+
+function concluirTutorial() {
+  tutorial.classList.add('hidden');
+  localStorage.setItem('tutorialVisto', 'true');
+}
+
+function avancarTutorial() {
+  const atual = document.getElementById(`tutorial-${passoTutorialAtual}`);
+  atual?.classList.add('hidden');
+
+  passoTutorialAtual++;
+
+  if (passoTutorialAtual > TOTAL_PASSOS_TUTORIAL) {
+    concluirTutorial();
+    return;
+  }
+
+  const proximo = document.getElementById(`tutorial-${passoTutorialAtual}`);
+  proximo?.classList.remove('hidden');
+}
+
+if (tutorial) {
+  if (localStorage.getItem('tutorialVisto') === 'true') {
+    tutorial.classList.add('hidden');
+  }
+
+  tutorial.addEventListener('click', (event) => {
+    if (event.target.closest('[data-tutorial-proximo]')) {
+      avancarTutorial();
+      return;
+    }
+
+    if (event.target.closest('[data-tutorial-pular]')) {
+      concluirTutorial();
+    }
+  });
+}
+
 const bar = document.querySelector('[data-control="camera"]');
 
 const state = {
