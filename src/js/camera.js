@@ -638,6 +638,16 @@ if (btnTorch) btnTorch.addEventListener('click', ativarFlash);
 
 if (btnMudar) btnMudar.addEventListener('click', mudarCamera);
 
+/* Duplo toque na tela também inverte a câmera */
+if (video) {
+  video.addEventListener('dblclick', () => {
+    mudarCamera();
+
+    video.classList.add('camera-flip-pulse');
+    setTimeout(() => video.classList.remove('camera-flip-pulse'), 350);
+  });
+}
+
 if (controleZoom) {
   controleZoom.addEventListener('input', async () => {
     atualizarZoom();
