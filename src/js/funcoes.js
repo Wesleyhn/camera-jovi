@@ -21,6 +21,7 @@ const state = {
 let temporizadorSegundos = 0;
 let temporizadorSubmenuAberto = false;
 let exposicaoSubmenuAberto = false;
+let filtrosSubmenuAberto = false;
 
 function render() {
   bar.querySelectorAll('li[data-control]').forEach((item) => {
@@ -42,6 +43,11 @@ function render() {
   const exposicaoMenu = document.getElementById('exposicao-opcoes');
   if (exposicaoMenu) {
     exposicaoMenu.classList.toggle('hidden', !exposicaoSubmenuAberto);
+  }
+
+  const filtrosMenu = document.getElementById('filtros-opcoes');
+  if (filtrosMenu) {
+    filtrosMenu.classList.toggle('hidden', !filtrosSubmenuAberto);
   }
 
   bar.querySelectorAll('[data-group="extra"]').forEach((item) => {
@@ -72,6 +78,7 @@ bar.addEventListener('click', (event) => {
   if (key === 'temporizador') {
     temporizadorSubmenuAberto = !temporizadorSubmenuAberto;
     exposicaoSubmenuAberto = false;
+    filtrosSubmenuAberto = false;
     render();
     return;
   }
@@ -79,17 +86,23 @@ bar.addEventListener('click', (event) => {
   if (key === 'exposicao') {
     exposicaoSubmenuAberto = !exposicaoSubmenuAberto;
     temporizadorSubmenuAberto = false;
+    filtrosSubmenuAberto = false;
     state.exposicao = exposicaoSubmenuAberto;
+    render();
+    return;
+  }
+
+  if (key === 'filtros') {
+    filtrosSubmenuAberto = !filtrosSubmenuAberto;
+    temporizadorSubmenuAberto = false;
+    exposicaoSubmenuAberto = false;
+    state.filtros = filtrosSubmenuAberto;
     render();
     return;
   }
 
   state[key] = !state[key];
   render();
-
-  if (key === 'filtros' && typeof alternarFiltro === 'function') {
-    alternarFiltro();
-  }
 });
 
 const temporizadorMenu = document.getElementById('temporizador-opcoes');
@@ -99,9 +112,25 @@ temporizadorMenu.addEventListener('click', (event) => {
 
   temporizadorSegundos = Number(opcao.dataset.segundos);
   state.temporizador = temporizadorSegundos > 0;
-  temporizadorSubmenuAberto = false;
 
   temporizadorMenu
+    .querySelectorAll('li')
+    .forEach((item) => item.classList.remove('text-destaque'));
+  opcao.classList.add('text-destaque');
+
+  render();
+});
+
+const filtrosMenu = document.getElementById('filtros-opcoes');
+filtrosMenu.addEventListener('click', (event) => {
+  const opcao = event.target.closest('li');
+  if (!opcao) return;
+
+  if (typeof aplicarFiltro === 'function') {
+    aplicarFiltro(opcao.dataset.filtro);
+  }
+
+  filtrosMenu
     .querySelectorAll('li')
     .forEach((item) => item.classList.remove('text-destaque'));
   opcao.classList.add('text-destaque');
@@ -128,6 +157,16 @@ document.addEventListener('click', (event) => {
   ) {
     exposicaoSubmenuAberto = false;
     state.exposicao = false;
+    precisaRenderizar = true;
+  }
+
+  if (
+    filtrosSubmenuAberto &&
+    !event.target.closest('#filtros-opcoes') &&
+    !event.target.closest('[data-control="filtros"]')
+  ) {
+    filtrosSubmenuAberto = false;
+    state.filtros = false;
     precisaRenderizar = true;
   }
 
