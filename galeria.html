@@ -9,12 +9,7 @@
     <meta
       name="description"
       content="JOVI — galeria inteligente com fotos e álbuns organizados por IA." />
-
-    <!-- Tailwind CSS via CDN — usado para o grid, flexbox, espaçamentos e
-         breakpoints responsivos (mobile-first). O CSS customizado em
-         style.css cuida das abas, cartões de álbum e da barra de IA. -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,11 +23,9 @@
       <!-- ===================== TOPO: MENU · ABAS · BUSCA ===================== -->
       <header
         class="cabecalho-galeria flex items-center justify-between gap-2 px-4 pt-6 pb-3 sm:px-8">
-        <!-- JS: futuramente este botão deve abrir um menu lateral;
-                 por ora ele leva diretamente para a tela de Configurações. -->
         <a
           href="configuracoes.html"
-          class="botao-menu flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full"
+          class="botao-menu flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
           aria-label="Abrir configurações da câmera">
           <span class="icone-menu" aria-hidden="true">
             <span></span><span></span><span></span>
@@ -66,10 +59,9 @@
           >
         </nav>
 
-        <!-- JS: futuramente deve focar/expandir o campo de busca com IA -->
         <button
           type="button"
-          class="botao-busca flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full"
+          class="botao-busca flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
           aria-label="Buscar">
           <svg
             width="18"
@@ -97,11 +89,8 @@
                  PAINEL "FOTOS" — grade de miniaturas
                  ============================================================= -->
         <section class="painel-fotos">
-          <!-- JS: futuramente exibir um efeito de "skeleton loading" (placeholders
-                     animados) enquanto as imagens reais carregam. Por enquanto as imagens
-                     já são exibidas diretamente, apenas com um fade-in em CSS. -->
           <ul
-            class="grade-fotos grid grid-cols-4 gap-[3px]"
+            class="grade-fotos grid grid-cols-4 gap-0.75"
             id="grade-fotos-recentes">
             <li class="foto-item">
               <input type="checkbox" id="foto-a-1" class="visor-input" />
@@ -762,7 +751,6 @@
             Você possui 5.000 itens.
           </p>
 
-          <!-- JS: cada pill deve filtrar a grade acima ao ser clicada -->
           <ul
             class="lista-pills flex gap-2.5 overflow-x-auto px-5 pb-1 pt-3 sm:px-8">
             <li class="pill pill-ativo">Todos</li>
@@ -777,7 +765,6 @@
                  PAINEL "ÁLBUNS" — grade de álbuns
                  ============================================================= -->
         <section class="painel-albuns px-5 sm:px-8">
-          <!-- JS: clicar em um álbum deve abrir a grade de fotos daquele álbum -->
           <ul
             class="grade-albuns grid grid-cols-2 gap-4 pt-1"
             id="lista-albuns">
@@ -802,7 +789,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -818,7 +805,7 @@
                     Recentes
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -1142,7 +1129,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -1158,7 +1145,7 @@
                     Favoritas
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -1482,7 +1469,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -1498,7 +1485,7 @@
                     Animais
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -1822,7 +1809,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -1838,7 +1825,7 @@
                     Natureza
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -2162,7 +2149,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -2178,7 +2165,7 @@
                     Viagens
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -2502,7 +2489,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -2518,7 +2505,7 @@
                     Vídeos
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -2842,7 +2829,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -2858,7 +2845,7 @@
                     Praia
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -3182,7 +3169,7 @@
                   class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
                   <a
                     href="#"
-                    class="botao-voltar flex h-8 w-8 flex-shrink-0 items-center justify-center"
+                    class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
                     aria-label="Fechar álbum">
                     <svg
                       width="22"
@@ -3198,7 +3185,7 @@
                     Deserto
                   </h1>
                 </header>
-                <ul class="grade-fotos grid grid-cols-4 gap-[3px]">
+                <ul class="grade-fotos grid grid-cols-4 gap-0.75">
                   <li class="foto-item">
                     <input
                       type="checkbox"
@@ -3516,8 +3503,6 @@
                  BUSCA / ORGANIZAÇÃO COM IA (comum às duas abas)
                  ============================================================= -->
         <div class="px-5 pt-5 sm:px-8">
-          <!-- JS: ao clicar, reordenar os álbuns/fotos por relevância da IA
-                     e exibir um toast de confirmação (ex.: "Organizado pela Jovi!") -->
           <button
             type="button"
             id="btn-organizar-ia"
@@ -3526,8 +3511,6 @@
             Organizar por IA
           </button>
 
-          <!-- JS: capturar o evento 'keypress' (tecla Enter) neste input para
-                     filtrar/organizar os álbuns e fotos acima com a IA da JOVI -->
           <form
             class="barra-busca-ia flex items-center"
             action="#"
@@ -3546,14 +3529,14 @@
 
     <div
       id="barra-acoes"
-      class="fixed bottom-0 left-0 w-full bg-[#17171a] border-t border-[rgba(255,255,255,0.12)] p-4 flex justify-between items-center z-[100] transform translate-y-full transition-transform duration-300">
+      class="fixed bottom-0 left-0 w-full bg-[#17171a] border-t border-[rgba(255,255,255,0.12)] p-4 flex justify-between items-center z-100 transform translate-y-full transition-transform duration-300">
       <span id="contador-selecao" class="text-white font-semibold text-sm"
         >0 selecionadas</span
       >
       <div class="flex gap-4">
         <button
           id="btn-compartilhar"
-          class="text-[#40afff] text-sm font-semibold">
+          class="text-destaque text-sm font-semibold">
           Compartilhar
         </button>
         <button id="btn-mover" class="text-white text-sm font-semibold">

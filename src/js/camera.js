@@ -50,9 +50,6 @@ let cameraAtual = 'environment';
 
 let filtroAtual = 'normal';
 
-/* TAMANHO DO VÍDEO (iOS costuma ignorar w-full/h-full em <video> com
-   srcObject até receber um tamanho explícito em pixels) */
-
 function redimensionarVideo() {
   if (!video) return;
 
@@ -621,8 +618,7 @@ if (btnIniciar) btnIniciar.addEventListener('click', iniciarCamera);
 
 if (btnFoto) {
   btnFoto.addEventListener('click', () => {
-    const modo =
-      typeof getCameraMode === 'function' ? getCameraMode() : 'foto';
+    const modo = typeof getCameraMode === 'function' ? getCameraMode() : 'foto';
 
     if (modo === 'video' || modo === 'cinematic') {
       gravarVideo();

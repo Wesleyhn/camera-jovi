@@ -381,37 +381,51 @@ function fecharOneHand() {
   barraInferior?.classList.remove('hidden');
 }
 
-/* Gesto: arrastar a partir da borda direita abre o modo */
-const ONEHAND_ZONA_BORDA = 24;
-const ONEHAND_LIMIAR = 50;
+/* Gesto: pressionar e segurar o obturador por 3s abre o modo */
+const ONEHAND_SEGURAR_MS = 3000;
 
-let onehandGestoInicio = null;
+const onehandShutterReal = document.getElementById('btn-foto');
+
+let onehandSegurarTimer = null;
+let onehandGestoAtivou = false;
 let onehandFechandoInicio = null;
 
-document.addEventListener('pointerdown', (event) => {
-  if (onehandAberto) return;
-  if (event.pointerType === 'mouse' && event.button !== 0) return;
+if (onehandShutterReal) {
+  onehandShutterReal.addEventListener('pointerdown', (event) => {
+    if (onehandAberto) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
 
-  const distanciaBorda = window.innerWidth - event.clientX;
-  if (distanciaBorda > ONEHAND_ZONA_BORDA) return;
+    onehandShutterReal.classList.add('onehand-armando');
 
-  onehandGestoInicio = { x: event.clientX, y: event.clientY };
-});
+    onehandSegurarTimer = setTimeout(() => {
+      onehandGestoAtivou = true;
+      onehandShutterReal.classList.remove('onehand-armando');
+      abrirOneHand(window.innerHeight * 0.55);
+    }, ONEHAND_SEGURAR_MS);
+  });
 
-document.addEventListener('pointermove', (event) => {
-  if (!onehandGestoInicio || onehandAberto) return;
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((tipo) => {
+    onehandShutterReal.addEventListener(tipo, () => {
+      clearTimeout(onehandSegurarTimer);
+      onehandShutterReal.classList.remove('onehand-armando');
+    });
+  });
 
-  const deltaX = onehandGestoInicio.x - event.clientX;
-  const deltaY = Math.abs(event.clientY - onehandGestoInicio.y);
-
-  if (deltaX > ONEHAND_LIMIAR && deltaY < ONEHAND_LIMIAR) {
-    abrirOneHand(onehandGestoInicio.y);
-    onehandGestoInicio = null;
-  }
-});
+  /* Impede que soltar após os 3s dispare a captura de foto/vídeo */
+  onehandShutterReal.addEventListener(
+    'click',
+    (event) => {
+      if (onehandGestoAtivou) {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        onehandGestoAtivou = false;
+      }
+    },
+    true,
+  );
+}
 
 document.addEventListener('pointerup', () => {
-  onehandGestoInicio = null;
   onehandFechandoInicio = null;
 });
 

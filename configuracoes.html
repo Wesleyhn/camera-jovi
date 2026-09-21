@@ -8,9 +8,6 @@
     <title>Configurações da Câmera · JOVI</title>
     <meta name="description" content="JOVI — configurações da câmera." />
 
-    <!-- Tailwind CSS via CDN — usado para o layout, espaçamentos e
-         breakpoints responsivos (mobile-first). O CSS customizado em
-         style.css cuida do cartão de configurações e dos switches. -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,10 +19,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="tela-preta min-h-screen">
-    <!-- Esta é uma tela independente (não fica empilhada com a Galeria). -->
     <header
       class="cabecalho-tela flex items-center gap-3 px-5 pt-7 pb-4 sm:px-8">
-      <!-- JS: futuramente pode navegar com history.back() em vez de link fixo -->
       <a
         href="./galeria.html"
         class="botao-voltar flex h-8 w-8 shrink-0 items-center justify-center"
@@ -46,8 +41,6 @@
     </header>
 
     <main class="px-5 pb-14 pt-2 sm:px-8">
-      <!-- Cartão único com a lista de 7 configurações. Cada linha tem um
-             switch customizado (checkbox escondido + label estilizada). -->
       <ul class="cartao-config mx-auto max-w-xl" id="lista-configuracoes">
         <!-- 1. Guia Dinâmico -->
         <li
@@ -62,9 +55,8 @@
               Utilize o guia dinâmico para melhorar as fotos
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Guia Dinâmico ativado! Linhas de enquadramento serão exibidas.") -->
-          <label class="switch flex-shrink-0" for="toggle-guia-dinamico">
+
+          <label class="switch shrink-0" for="toggle-guia-dinamico">
             <input
               type="checkbox"
               id="toggle-guia-dinamico"
@@ -86,9 +78,8 @@
               Utilize o HDR automático para ter fotos com qualidade avançada
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "HDR automático ativado! Suas fotos terão mais contraste e detalhes.") -->
-          <label class="switch flex-shrink-0" for="toggle-hdr">
+
+          <label class="switch shrink-0" for="toggle-hdr">
             <input
               type="checkbox"
               id="toggle-hdr"
@@ -111,9 +102,8 @@
               Habilite a sugestão de disparo para capturar o melhor frame
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Sugestão ativada! Fotos em movimento serão priorizadas.") -->
-          <label class="switch flex-shrink-0" for="toggle-sugestao-disparo">
+
+          <label class="switch shrink-0" for="toggle-sugestao-disparo">
             <input
               type="checkbox"
               id="toggle-sugestao-disparo"
@@ -136,9 +126,8 @@
               Enquadre as fotos com o grid de enquadramento
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Grid de Enquadramento ativado! A grade de terços aparecerá no visor.") -->
-          <label class="switch flex-shrink-0" for="toggle-grid">
+
+          <label class="switch shrink-0" for="toggle-grid">
             <input type="checkbox" id="toggle-grid" name="grid-enquadramento" />
             <span class="slider" aria-hidden="true"></span>
           </label>
@@ -157,9 +146,8 @@
               Faça leitura de QR Code através da câmera nativa
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Leitura de QR Code ativada!") -->
-          <label class="switch flex-shrink-0" for="toggle-qrcode">
+
+          <label class="switch shrink-0" for="toggle-qrcode">
             <input type="checkbox" id="toggle-qrcode" name="qr-code" />
             <span class="slider" aria-hidden="true"></span>
           </label>
@@ -178,9 +166,8 @@
               Realize captura com base em gestos realizados
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Disparo por Gesto ativado! Levante a mão para capturar.") -->
-          <label class="switch flex-shrink-0" for="toggle-gesto">
+
+          <label class="switch shrink-0" for="toggle-gesto">
             <input type="checkbox" id="toggle-gesto" name="disparo-gesto" />
             <span class="slider" aria-hidden="true"></span>
           </label>
@@ -199,9 +186,8 @@
               Otimize suas mídias de forma automática
             </p>
           </div>
-          <!-- JS: capturar o evento 'change' deste checkbox e exibir notificação
-                     (ex.: "Mídias Otimizadas ativadas! Suas fotos ocuparão menos espaço.") -->
-          <label class="switch flex-shrink-0" for="toggle-midias-otimizadas">
+
+          <label class="switch shrink-0" for="toggle-midias-otimizadas">
             <input
               type="checkbox"
               id="toggle-midias-otimizadas"
