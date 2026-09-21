@@ -332,6 +332,167 @@ modesBar.addEventListener('scroll', () => {
   }, 120);
 });
 
+/* MODO ONEHAND */
+
+const onehandOverlay = document.getElementById('onehand-overlay');
+const onehandCircle = document.getElementById('onehand-circle');
+const onehandShutter = document.getElementById('onehand-shutter');
+const onehandShutterIcon = document.getElementById('onehand-shutter-icon');
+const onehandAjustes = document.getElementById('onehand-ajustes');
+const onehandModos = document.querySelectorAll('.onehand-modo');
+const barraAjustes = document.getElementById('barra-ajustes');
+const barraZoom = document.getElementById('barra-zoom');
+const barraInferior = document.getElementById('barra-inferior');
+
+let onehandAberto = false;
+
+function sincronizarModoOneHand() {
+  const modoAtual = getCameraMode();
+
+  onehandModos.forEach((item) => {
+    item.classList.toggle('text-destaque', item.dataset.mode === modoAtual);
+  });
+}
+
+function abrirOneHand(clientY) {
+  const metadeDiametro = onehandCircle.offsetHeight / 2 || 160;
+  const minTop = metadeDiametro;
+  const maxTop = window.innerHeight - metadeDiametro;
+  const top = Math.min(Math.max(clientY, minTop), maxTop);
+
+  onehandCircle.style.top = `${top}px`;
+
+  barraAjustes?.classList.add('hidden');
+  barraZoom?.classList.add('hidden');
+  barraInferior?.classList.add('hidden');
+
+  sincronizarModoOneHand();
+
+  onehandAberto = true;
+  onehandOverlay.classList.add('onehand-open');
+}
+
+function fecharOneHand() {
+  onehandAberto = false;
+  onehandOverlay.classList.remove('onehand-open');
+
+  barraAjustes?.classList.remove('hidden');
+  barraZoom?.classList.remove('hidden');
+  barraInferior?.classList.remove('hidden');
+}
+
+/* Gesto: arrastar a partir da borda direita abre o modo */
+const ONEHAND_ZONA_BORDA = 24;
+const ONEHAND_LIMIAR = 50;
+
+let onehandGestoInicio = null;
+let onehandFechandoInicio = null;
+
+document.addEventListener('pointerdown', (event) => {
+  if (onehandAberto) return;
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+  const distanciaBorda = window.innerWidth - event.clientX;
+  if (distanciaBorda > ONEHAND_ZONA_BORDA) return;
+
+  onehandGestoInicio = { x: event.clientX, y: event.clientY };
+});
+
+document.addEventListener('pointermove', (event) => {
+  if (!onehandGestoInicio || onehandAberto) return;
+
+  const deltaX = onehandGestoInicio.x - event.clientX;
+  const deltaY = Math.abs(event.clientY - onehandGestoInicio.y);
+
+  if (deltaX > ONEHAND_LIMIAR && deltaY < ONEHAND_LIMIAR) {
+    abrirOneHand(onehandGestoInicio.y);
+    onehandGestoInicio = null;
+  }
+});
+
+document.addEventListener('pointerup', () => {
+  onehandGestoInicio = null;
+  onehandFechandoInicio = null;
+});
+
+/* Fechar: tocar fora do círculo */
+document.addEventListener('click', (event) => {
+  if (!onehandAberto) return;
+  if (event.target.closest('#onehand-circle')) return;
+
+  fecharOneHand();
+});
+
+/* Fechar: arrastar o círculo de volta em direção à borda */
+if (onehandCircle) {
+  onehandCircle.addEventListener('pointerdown', (event) => {
+    if (event.target.closest('.onehand-item, #onehand-shutter')) return;
+
+    onehandFechandoInicio = event.clientX;
+  });
+
+  onehandCircle.addEventListener('pointermove', (event) => {
+    if (onehandFechandoInicio === null) return;
+
+    if (event.clientX - onehandFechandoInicio > ONEHAND_LIMIAR) {
+      fecharOneHand();
+      onehandFechandoInicio = null;
+    }
+  });
+}
+
+/* Obturador (reaproveita a lógica real de foto/vídeo) */
+if (onehandShutter) {
+  onehandShutter.addEventListener('click', () => {
+    document.getElementById('btn-foto')?.click();
+  });
+}
+
+/* Espelha ícone e pulso de gravação do obturador real */
+const onehandShutterObservador = new MutationObserver(() => {
+  if (onehandShutterIcon && shutterIcon) {
+    onehandShutterIcon.src = shutterIcon.src;
+  }
+  if (onehandShutter && shutterBtn) {
+    onehandShutter.classList.toggle(
+      'is-recording',
+      shutterBtn.classList.contains('is-recording'),
+    );
+  }
+});
+
+if (shutterIcon) {
+  onehandShutterObservador.observe(shutterIcon, {
+    attributes: true,
+    attributeFilter: ['src'],
+  });
+}
+if (shutterBtn) {
+  onehandShutterObservador.observe(shutterBtn, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+}
+
+/* Modos rápidos (Video/Foto/Retrato) */
+onehandModos.forEach((botao) => {
+  botao.addEventListener('click', () => {
+    document
+      .querySelector(`#camera-modes [data-mode="${botao.dataset.mode}"]`)
+      ?.click();
+    sincronizarModoOneHand();
+  });
+});
+
+/* Ajustes: fecha o modo e abre o menu de ajustes normal */
+if (onehandAjustes) {
+  onehandAjustes.addEventListener('click', () => {
+    fecharOneHand();
+    state.menuOpen = true;
+    render();
+  });
+}
+
 render();
 const activeMode = document.querySelector('[data-active]');
 activeMode?.scrollIntoView({ behavior: 'auto', inline: 'center' });

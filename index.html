@@ -19,7 +19,7 @@
     <main class="flex flex-col items-center justify-center fixed inset-0">
       <div class="absolute inset-0 flex flex-col items-center">
         <!-- Botão ajustes da câmera -->
-        <div class="relative z-10 top-5">
+        <div id="barra-ajustes" class="relative z-10 top-5">
           <div class="btn-liquid-glass px-3 py-3">
             <ul class="flex gap-6 px-1 items-center" data-control="camera">
               <li data-control="flash" data-group="extra" id="btn-torch">
@@ -359,7 +359,7 @@
         </div>
 
         <!-- Controles de zoom -->
-        <div class="liquid-glass absolute z-10 bottom-44">
+        <div id="barra-zoom" class="liquid-glass absolute z-10 bottom-44">
           <div
             class="flex gap-8 *:hover:text-destaque/80 *:transition-all *:duration-300 *:cursor-pointer px-4 py-1"
             data-control="zoom">
@@ -370,7 +370,7 @@
           </div>
         </div>
 
-        <div class="absolute z-10 bottom-0 h-40 w-full bg-black/40">
+        <div id="barra-inferior" class="absolute z-10 bottom-0 h-40 w-full bg-black/40">
           <div class="absolute z-10 bottom-15 h-20 w-full">
             <div
               id="camera-modes"
@@ -446,6 +446,65 @@
         <canvas id="photo-canvas" style="display: none"> </canvas>
       </div>
     </main>
+
+    <!-- Modo OneHand -->
+    <div id="onehand-overlay" class="fixed inset-0 z-40">
+      <div id="onehand-circle" class="onehand-circle" style="top: 55%">
+        <button
+          type="button"
+          id="onehand-ajustes"
+          class="onehand-item"
+          style="top: 15%; right: 255px">
+          Ajustes
+        </button>
+
+        <button
+          type="button"
+          class="onehand-item onehand-modo"
+          data-mode="video"
+          style="top: 32.5%; right: 265px">
+          Video
+        </button>
+
+        <button
+          type="button"
+          class="onehand-item onehand-modo text-destaque"
+          data-mode="foto"
+          data-onehand-active
+          style="top: 50%; right: 240px">
+          Foto
+        </button>
+
+        <button
+          type="button"
+          class="onehand-item onehand-modo"
+          data-mode="portrait"
+          style="top: 67.5%; right: 265px">
+          Retrato
+        </button>
+
+        <a
+          href="./galeria.html"
+          id="onehand-galeria"
+          class="onehand-item"
+          style="top: 85%; right: 255px">
+          Galeria
+        </a>
+
+        <button
+          type="button"
+          id="onehand-shutter"
+          class="onehand-hub"
+          aria-label="Tirar foto">
+          <img
+            id="onehand-shutter-icon"
+            src="./src/assets/icons/Ellipse-cam.svg"
+            alt=""
+            class="block w-full h-full object-cover" />
+        </button>
+      </div>
+    </div>
+
     <!-- Script -->
     <script src="./src/js/funcoes.js"></script>
     <script src="./src/js/camera.js"></script>
