@@ -508,6 +508,9 @@
   .pb-14 {
     padding-bottom: calc(var(--spacing) * 14);
   }
+  .text-center {
+    text-align: center;
+  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -581,6 +584,9 @@
   }
   .accent-destaque {
     accent-color: var(--color-destaque);
+  }
+  .opacity-0 {
+    opacity: 0%;
   }
   .opacity-40 {
     opacity: 40%;

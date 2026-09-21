@@ -47,7 +47,7 @@
                 </button>
               </li>
               <li data-control="colors" data-group="extra">
-                <button type="button" aria-label="Live Photo">
+                <button type="button" aria-label="Balanço de branco">
                   <svg
                     width="21"
                     height="20"
@@ -336,6 +336,26 @@
               </li>
             </ul>
           </div>
+
+          <!-- Opções de balanço de branco -->
+          <div
+            id="colors-opcoes"
+            class="liquid-glass rounded-2xl hidden absolute left-1/2 top-full mt-3 w-64 -translate-x-1/2 px-5 py-4">
+            <div class="flex flex-col gap-2 text-xs font-light">
+              <span class="text-center">Balanço de Temperatura</span>
+              <input
+                type="range"
+                id="controle-temperatura"
+                min="-50"
+                max="50"
+                value="0"
+                class="w-full accent-destaque" />
+              <span class="flex items-center justify-between">
+                <span>Frio</span>
+                <span>Quente</span>
+              </span>
+            </div>
+          </div>
         </div>
 
         <!-- Controles de zoom -->
@@ -416,6 +436,10 @@
           style="
             filter: brightness(100%) contrast(100%) saturate(100%);
           "></video>
+        <div
+          id="temperatura-overlay"
+          class="absolute inset-0 pointer-events-none opacity-0"
+          style="background-color: #ff9633; mix-blend-mode: overlay"></div>
         <div
           id="grade-camera"
           class="hidden absolute inset-0 pointer-events-none"></div>

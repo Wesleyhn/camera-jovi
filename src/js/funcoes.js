@@ -22,6 +22,7 @@ let temporizadorSegundos = 0;
 let temporizadorSubmenuAberto = false;
 let exposicaoSubmenuAberto = false;
 let filtrosSubmenuAberto = false;
+let colorsSubmenuAberto = false;
 
 function render() {
   bar.querySelectorAll('li[data-control]').forEach((item) => {
@@ -48,6 +49,11 @@ function render() {
   const filtrosMenu = document.getElementById('filtros-opcoes');
   if (filtrosMenu) {
     filtrosMenu.classList.toggle('hidden', !filtrosSubmenuAberto);
+  }
+
+  const colorsMenu = document.getElementById('colors-opcoes');
+  if (colorsMenu) {
+    colorsMenu.classList.toggle('hidden', !colorsSubmenuAberto);
   }
 
   bar.querySelectorAll('[data-group="extra"]').forEach((item) => {
@@ -79,6 +85,7 @@ bar.addEventListener('click', (event) => {
     temporizadorSubmenuAberto = !temporizadorSubmenuAberto;
     exposicaoSubmenuAberto = false;
     filtrosSubmenuAberto = false;
+    colorsSubmenuAberto = false;
     render();
     return;
   }
@@ -87,6 +94,7 @@ bar.addEventListener('click', (event) => {
     exposicaoSubmenuAberto = !exposicaoSubmenuAberto;
     temporizadorSubmenuAberto = false;
     filtrosSubmenuAberto = false;
+    colorsSubmenuAberto = false;
     state.exposicao = exposicaoSubmenuAberto;
     render();
     return;
@@ -96,7 +104,18 @@ bar.addEventListener('click', (event) => {
     filtrosSubmenuAberto = !filtrosSubmenuAberto;
     temporizadorSubmenuAberto = false;
     exposicaoSubmenuAberto = false;
+    colorsSubmenuAberto = false;
     state.filtros = filtrosSubmenuAberto;
+    render();
+    return;
+  }
+
+  if (key === 'colors') {
+    colorsSubmenuAberto = !colorsSubmenuAberto;
+    temporizadorSubmenuAberto = false;
+    exposicaoSubmenuAberto = false;
+    filtrosSubmenuAberto = false;
+    state.colors = colorsSubmenuAberto;
     render();
     return;
   }
@@ -170,8 +189,35 @@ document.addEventListener('click', (event) => {
     precisaRenderizar = true;
   }
 
+  if (
+    colorsSubmenuAberto &&
+    !event.target.closest('#colors-opcoes') &&
+    !event.target.closest('[data-control="colors"]')
+  ) {
+    colorsSubmenuAberto = false;
+    state.colors = false;
+    precisaRenderizar = true;
+  }
+
   if (precisaRenderizar) render();
 });
+
+const controleTemperatura = document.getElementById('controle-temperatura');
+const temperaturaOverlay = document.getElementById('temperatura-overlay');
+
+function atualizarTemperatura() {
+  if (!controleTemperatura || !temperaturaOverlay) return;
+
+  const valor = Number(controleTemperatura.value);
+  const intensidade = Math.min(Math.abs(valor) / 50, 1);
+
+  temperaturaOverlay.style.backgroundColor = valor >= 0 ? '#ff9633' : '#3399ff';
+  temperaturaOverlay.style.opacity = (intensidade * 0.35).toFixed(2);
+}
+
+if (controleTemperatura) {
+  controleTemperatura.addEventListener('input', atualizarTemperatura);
+}
 
 const zoomBar = document.querySelector('[data-control="zoom"]');
 zoomBar.addEventListener('click', (event) => {
@@ -231,22 +277,59 @@ function updateShutter(mode) {
 }
 
 const modesBar = document.getElementById('camera-modes');
-modesBar.addEventListener('click', (event) => {
-  const target = event.target.closest('p');
-  if (!target) return;
 
+function ativarModo(target, { rolar = true } = {}) {
   modesBar.querySelectorAll('p').forEach((item) => {
     item.classList.remove('text-destaque');
     item.removeAttribute('data-active');
   });
   target.classList.add('text-destaque');
   target.setAttribute('data-active', '');
-  target.scrollIntoView({
-    behavior: 'smooth',
-    inline: 'center',
-    block: 'nearest',
-  });
+
+  if (rolar) {
+    target.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+      block: 'nearest',
+    });
+  }
+
   updateShutter(target.dataset.mode);
+}
+
+modesBar.addEventListener('click', (event) => {
+  const target = event.target.closest('p');
+  if (!target) return;
+
+  ativarModo(target);
+});
+
+let modosScrollTimeout = null;
+modesBar.addEventListener('scroll', () => {
+  clearTimeout(modosScrollTimeout);
+
+  modosScrollTimeout = setTimeout(() => {
+    const centroBar =
+      modesBar.getBoundingClientRect().left + modesBar.clientWidth / 2;
+
+    let maisProximo = null;
+    let menorDistancia = Infinity;
+
+    modesBar.querySelectorAll('p').forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const centroItem = rect.left + rect.width / 2;
+      const distancia = Math.abs(centroItem - centroBar);
+
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia;
+        maisProximo = item;
+      }
+    });
+
+    if (maisProximo && !maisProximo.hasAttribute('data-active')) {
+      ativarModo(maisProximo, { rolar: false });
+    }
+  }, 120);
 });
 
 render();
