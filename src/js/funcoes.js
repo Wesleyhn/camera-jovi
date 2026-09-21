@@ -118,13 +118,6 @@ bar.addEventListener('click', (event) => {
   const action = button.dataset.control;
   if (action === 'menu-open' || action === 'menu-close') {
     state.menuOpen = action === 'menu-open';
-
-    if (typeof onehandAberto !== 'undefined' && onehandAberto) {
-      document
-        .getElementById('barra-ajustes')
-        ?.classList.toggle('hidden', !state.menuOpen);
-    }
-
     render();
     return;
   }
@@ -388,7 +381,7 @@ const onehandOverlay = document.getElementById('onehand-overlay');
 const onehandCircle = document.getElementById('onehand-circle');
 const onehandShutter = document.getElementById('onehand-shutter');
 const onehandShutterIcon = document.getElementById('onehand-shutter-icon');
-const onehandAjustes = document.getElementById('onehand-ajustes');
+const onehandInverter = document.getElementById('onehand-inverter');
 const onehandModos = document.querySelectorAll('.onehand-modo');
 const barraAjustes = document.getElementById('barra-ajustes');
 const barraZoom = document.getElementById('barra-zoom');
@@ -412,9 +405,13 @@ function abrirOneHand(clientY) {
 
   onehandCircle.style.top = `${top}px`;
 
-  barraAjustes?.classList.add('hidden');
   barraZoom?.classList.add('hidden');
   barraInferior?.classList.add('hidden');
+
+  state.menuOpen = true;
+  barraAjustes?.classList.remove('hidden');
+  barraAjustes?.classList.add('onehand-ajustes-baixo');
+  render();
 
   sincronizarModoOneHand();
 
@@ -425,6 +422,10 @@ function abrirOneHand(clientY) {
 function fecharOneHand() {
   onehandAberto = false;
   onehandOverlay.classList.remove('onehand-open');
+
+  state.menuOpen = false;
+  barraAjustes?.classList.remove('onehand-ajustes-baixo');
+  render();
 
   barraAjustes?.classList.remove('hidden');
   barraZoom?.classList.remove('hidden');
@@ -568,12 +569,10 @@ onehandModos.forEach((botao) => {
   });
 });
 
-/* Ajustes: mantém o modo OneHand aberto e mostra apenas a barra de ajustes */
-if (onehandAjustes) {
-  onehandAjustes.addEventListener('click', () => {
-    state.menuOpen = !state.menuOpen;
-    barraAjustes?.classList.toggle('hidden', !state.menuOpen);
-    render();
+/* Inverter câmera (reaproveita a lógica real do botão de girar) */
+if (onehandInverter) {
+  onehandInverter.addEventListener('click', () => {
+    onehandClicarSemFechar(document.getElementById('btn-alternar'));
   });
 }
 

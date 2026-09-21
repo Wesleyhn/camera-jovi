@@ -29,6 +29,25 @@
     @apply absolute inset-0;
   }
 
+  /* Ajustes reposicionados para a parte inferior no modo OneHand */
+  #barra-ajustes.onehand-ajustes-baixo {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 28px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .onehand-ajustes-baixo #temporizador-opcoes,
+  .onehand-ajustes-baixo #exposicao-opcoes,
+  .onehand-ajustes-baixo #filtros-opcoes,
+  .onehand-ajustes-baixo #colors-opcoes {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+  }
+
   #grade-camera {
     background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px),

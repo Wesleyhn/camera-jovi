@@ -1046,6 +1046,19 @@
     position: absolute;
     inset: 0px;
   }
+  #barra-ajustes.onehand-ajustes-baixo {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 28px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  .onehand-ajustes-baixo #temporizador-opcoes, .onehand-ajustes-baixo #exposicao-opcoes, .onehand-ajustes-baixo #filtros-opcoes, .onehand-ajustes-baixo #colors-opcoes {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+  }
   #grade-camera {
     background-image: linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.55) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
     background-position: 33.3333% 0, 66.6666% 0, 0 33.3333%, 0 66.6666%;
