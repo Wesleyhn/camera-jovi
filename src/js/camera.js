@@ -67,6 +67,7 @@ window.addEventListener('resize', redimensionarVideo);
 window.addEventListener('orientationchange', () => {
   setTimeout(redimensionarVideo, 300);
 });
+window.visualViewport?.addEventListener('resize', redimensionarVideo);
 
 if (video) {
   video.addEventListener('loadedmetadata', redimensionarVideo);
@@ -233,6 +234,8 @@ async function tirarFoto() {
     return;
   }
 
+  redimensionarVideo();
+
   const segundos =
     typeof temporizadorSegundos === 'number' ? temporizadorSegundos : 0;
 
@@ -303,6 +306,9 @@ function gravarVideo() {
 
     if (shutterBtn) shutterBtn.classList.remove('is-recording');
 
+    redimensionarVideo();
+    setTimeout(redimensionarVideo, 300);
+
     return;
   }
 
@@ -343,6 +349,9 @@ function gravarVideo() {
   gravador.start();
 
   if (shutterBtn) shutterBtn.classList.add('is-recording');
+
+  redimensionarVideo();
+  setTimeout(redimensionarVideo, 300);
 }
 
 /* CRIAR VÍDEO */
