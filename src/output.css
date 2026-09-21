@@ -211,6 +211,9 @@
   .top-5 {
     top: calc(var(--spacing) * 5);
   }
+  .top-\[28\%\] {
+    top: 28%;
+  }
   .top-\[38\%\] {
     top: 38%;
   }
