@@ -28,10 +28,6 @@ const controleZoom = document.getElementById('controle-zoom');
 
 const valorZoom = document.getElementById('valor-zoom');
 
-const ativarGrade = document.getElementById('ativar-grade');
-
-const grade = document.getElementById('grade-camera');
-
 const brilho = document.getElementById('controle-brilho');
 
 const contraste = document.getElementById('controle-contraste');
@@ -519,16 +515,6 @@ async function definirZoom(valorZoom) {
   }
 }
 
-/* GRADE */
-
-if (ativarGrade) {
-  ativarGrade.addEventListener('change', () => {
-    if (!grade) return;
-
-    grade.style.display = ativarGrade.checked ? 'grid' : 'none';
-  });
-}
-
 /* FILTROS */
 
 function montarFiltro() {
@@ -675,10 +661,6 @@ if (controleZoom) {
 }
 
 /* INICIALIZAÇÃO */
-
-if (grade) {
-  grade.style.display = 'none';
-}
 
 aplicarFiltro('normal');
 

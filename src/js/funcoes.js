@@ -11,8 +11,8 @@ const bar = document.querySelector('[data-control="camera"]');
 const state = {
   flash: false,
   colors: false,
-  macro: false,
-  abertura: false,
+  grade: false,
+  temporizador: false,
   exposicao: false,
   filtros: false,
   menuOpen: false,
@@ -22,8 +22,13 @@ function render() {
   bar.querySelectorAll('li[data-control]').forEach((item) => {
     const key = item.dataset.control;
     if (key === 'menu') return;
-    item.classList.toggle('is-active', state[key]);
+    item.classList.toggle('is-active', Boolean(state[key]));
   });
+
+  const gradeOverlay = document.getElementById('grade-camera');
+  if (gradeOverlay) {
+    gradeOverlay.classList.toggle('hidden', !state.grade);
+  }
 
   bar.querySelectorAll('[data-group="extra"]').forEach((item) => {
     item.classList.toggle('hidden', !state.menuOpen);

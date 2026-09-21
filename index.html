@@ -16,8 +16,7 @@
       </p>
     </div>
     <!-- Câmera -->
-    <main
-      class="flex flex-col items-center justify-center fixed inset-0">
+    <main class="flex flex-col items-center justify-center fixed inset-0">
       <div class="absolute inset-0 flex flex-col items-center">
         <!-- Botão ajustes da câmera -->
         <div class="relative z-10 top-5">
@@ -68,25 +67,28 @@
                   </svg>
                 </button>
               </li>
-              <li data-control="macro" data-group="extra">
-                <button type="button" aria-label="Macro">
+
+              <li data-control="grade" data-group="extra">
+                <button type="button" aria-label="grade" id="ativar-grade">
                   <svg
-                    width="21"
+                    width="26"
                     height="20"
-                    viewBox="0 0 21 20"
+                    viewBox="0 0 26 20"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_35_405)">
+                    <g clip-path="url(#clip0_132_181)">
                       <path
-                        d="M9.96094 19.9219C15.459 19.9219 19.9219 15.459 19.9219 9.96094C19.9219 4.46289 15.459 0 9.96094 0C4.46289 0 0 4.46289 0 9.96094C0 15.459 4.46289 19.9219 9.96094 19.9219ZM9.96094 18.2617C5.37109 18.2617 1.66016 14.5508 1.66016 9.96094C1.66016 5.37109 5.37109 1.66016 9.96094 1.66016C14.5508 1.66016 18.2617 5.37109 18.2617 9.96094C18.2617 14.5508 14.5508 18.2617 9.96094 18.2617Z"
-                        fill="currentColor" />
+                        d="M3.46225 20H12.2612V18.251H3.48431C2.38167 18.251 1.77523 17.6752 1.77523 16.5454V10.7442H0V16.6431C0 18.8811 1.15776 20 3.46225 20ZM13.7718 20H22.5378C24.8532 20 26 18.8811 26 16.6431V10.7442H24.2247V16.5454C24.2247 17.6752 23.6073 18.251 22.5156 18.251H13.7718V20ZM24.2247 9.26672H26V3.36774C26 1.12982 24.8532 0 22.5378 0H13.7718V1.74905H22.5156C23.6073 1.74905 24.2247 2.3357 24.2247 3.46551V9.26672ZM0 9.26672H1.77523V3.46551C1.77523 2.3357 2.38167 1.74905 3.48431 1.74905H12.2612V0H3.46225C1.15776 0 0 1.12982 0 3.36774V9.26672Z"
+                        fill="currentColor"
+                        fill-opacity="0.85" />
                       <path
-                        d="M6.98242 5.45898C6.72852 6.03516 6.60156 6.60156 6.60156 7.1582C6.60156 9.00391 7.91992 10.5176 9.94141 10.5176C11.9824 10.5176 13.2812 9.00391 13.2812 7.1582C13.2812 6.60156 13.1738 6.03516 12.9199 5.45898C12.8125 5.21484 12.5098 5.17578 12.3145 5.38086L11.2012 6.5332L10.2441 5.2832C10.0879 5.06836 9.81445 5.06836 9.6582 5.2832L8.69141 6.5332L7.56836 5.38086C7.37305 5.17578 7.08008 5.21484 6.98242 5.45898ZM9.52148 15.6348C9.52148 15.8691 9.7168 16.0352 9.94141 16.0352C12.5391 16.0352 14.9414 14.4336 15.7324 12.1582C15.8496 11.8457 15.7227 11.6309 15.3906 11.6309C12.8125 11.6309 10.9375 13.1543 10.1953 15.0879L10.3613 15.2637V9.98047H9.52148V15.6348ZM8.93555 13.7988C7.99805 12.5195 6.44531 11.6309 4.49219 11.6309C4.15039 11.6309 4.0332 11.8457 4.15039 12.1582C4.83398 14.1602 6.75781 15.6348 8.99414 15.9375C8.95508 15.8496 8.93555 15.7422 8.93555 15.6348V13.7988Z"
-                        fill="currentColor" />
+                        d="M13.022 13.5796C15.0399 13.5796 16.6718 11.9717 16.6718 9.99455C16.6718 8.00651 15.0399 6.39868 13.022 6.39868C11.0153 6.39868 9.37234 8.00651 9.37234 9.99455C9.37234 11.9717 11.0153 13.5796 13.022 13.5796Z"
+                        fill="currentColor"
+                        fill-opacity="0.85" />
                     </g>
                     <defs>
-                      <clipPath id="clip0_35_405">
-                        <rect width="20.2832" height="19.9316" fill="white" />
+                      <clipPath id="clip0_132_181">
+                        <rect width="26" height="20" fill="white" />
                       </clipPath>
                     </defs>
                   </svg>
@@ -151,7 +153,7 @@
                 data-control="temporizador"
                 data-group="extra"
                 id="temporizador">
-                <button type="button" aria-label="Abertura">
+                <button type="button" aria-label="Temporizador">
                   <svg
                     width="32"
                     height="22"
@@ -176,6 +178,7 @@
                   </svg>
                 </button>
               </li>
+
               <li data-control="exposicao" data-group="extra">
                 <button type="button" aria-label="Exposição">
                   <svg
@@ -200,6 +203,7 @@
                   </svg>
                 </button>
               </li>
+
               <li data-control="filtros" data-group="extra">
                 <button type="button" aria-label="Filtros">
                   <svg
@@ -312,6 +316,9 @@
           style="
             filter: brightness(100%) contrast(100%) saturate(100%);
           "></video>
+        <div
+          id="grade-camera"
+          class="hidden absolute inset-0 pointer-events-none"></div>
         <canvas id="photo-canvas" style="display: none"> </canvas>
       </div>
     </main>
