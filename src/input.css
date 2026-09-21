@@ -87,7 +87,7 @@
   }
 
   .onehand-armando {
-    animation: onehand-armando 3s linear;
+    animation: onehand-armando 1.5s linear;
   }
 
   @keyframes onehand-armando {

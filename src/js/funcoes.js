@@ -382,7 +382,7 @@ function fecharOneHand() {
 }
 
 /* Gesto: pressionar e segurar o obturador por 3s abre o modo */
-const ONEHAND_SEGURAR_MS = 3000;
+const ONEHAND_SEGURAR_MS = 1500;
 
 const onehandShutterReal = document.getElementById('btn-foto');
 
