@@ -46,7 +46,7 @@ let gravador = null;
 
 let partesVideo = [];
 
-let cameraAtual = 'user';
+let cameraAtual = 'environment';
 
 let filtroAtual = 'normal';
 
