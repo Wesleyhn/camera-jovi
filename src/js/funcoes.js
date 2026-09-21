@@ -188,6 +188,29 @@ zoomBar.addEventListener('click', (event) => {
   }
 });
 
+function atualizarOpcoesZoom() {
+  const cameraFrontal = typeof cameraAtual !== 'undefined' && cameraAtual === 'user';
+
+  const zoomMin = zoomBar.querySelector('[data-zoom="0.5"]');
+  const zoomMax = zoomBar.querySelector('[data-zoom="5"]');
+  if (zoomMin) zoomMin.classList.toggle('hidden', cameraFrontal);
+  if (zoomMax) zoomMax.classList.toggle('hidden', cameraFrontal);
+
+  if (!cameraFrontal) return;
+
+  const ativo = zoomBar.querySelector('.zoom-ativo');
+  if (ativo && (ativo.dataset.zoom === '0.5' || ativo.dataset.zoom === '5')) {
+    zoomBar
+      .querySelectorAll('span')
+      .forEach((item) => item.classList.remove('zoom-ativo'));
+
+    const zoomUm = zoomBar.querySelector('[data-zoom="1"]');
+    if (zoomUm) zoomUm.classList.add('zoom-ativo');
+
+    if (typeof definirZoom === 'function') definirZoom(1);
+  }
+}
+
 const shutterIcon = document.getElementById('shutter-icon');
 const shutterBtn = document.getElementById('shutter-btn');
 const recordModes = ['video', 'cinematic'];

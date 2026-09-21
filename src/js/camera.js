@@ -176,6 +176,10 @@ async function iniciarCamera() {
 
     verificarZoom();
 
+    if (typeof atualizarOpcoesZoom === 'function') {
+      atualizarOpcoesZoom();
+    }
+
     try {
       const audioStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
