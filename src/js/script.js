@@ -11,57 +11,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let fotosSelecionadas = new Set();
     let pressTimer = null;
 
+    // Dentro do popup da câmera, "voltar" fecha o popup em vez de navegar.
+    const voltarCamera = document.getElementById('voltar-camera');
+    if (voltarCamera && window.parent !== window) {
+        voltarCamera.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.parent.postMessage(
+                { tipo: 'jovi-fechar-galeria' },
+                window.location.origin,
+            );
+        });
+    }
+
     // -----------------------------------------------------------------------
     // Imagens e identificação dos itens
     // -----------------------------------------------------------------------
-
-    // Cria uma imagem de demonstração quando a galeria não pode usar a original.
-    function criarImagemLocal(label, indice) {
-        const paletas = [
-            ['#0f766e', '#134e4a', '#99f6e4'],
-            ['#1d4ed8', '#0f172a', '#bfdbfe'],
-            ['#7c3aed', '#1f2937', '#ddd6fe'],
-            ['#ea580c', '#431407', '#fed7aa'],
-            ['#16a34a', '#14532d', '#bbf7d0'],
-            ['#d97706', '#451a03', '#fef3c7'],
-            ['#e11d48', '#4c0519', '#fecdd3'],
-            ['#0891b2', '#082f49', '#a5f3fc']
-        ];
-
-        const [corPrincipal, corEscura, corTexto] = paletas[indice % paletas.length];
-        const texto = (label || `Foto ${indice + 1}`).replace(/&/g, '&amp;');
-        const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
-                <defs>
-                    <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
-                        <stop offset="0%" stop-color="${corPrincipal}"/>
-                        <stop offset="100%" stop-color="${corEscura}"/>
-                    </linearGradient>
-                </defs>
-                <rect width="1200" height="1200" fill="url(#grad)"/>
-                <circle cx="1040" cy="180" r="170" fill="rgba(255,255,255,0.12)"/>
-                <circle cx="200" cy="990" r="210" fill="rgba(255,255,255,0.08)"/>
-                <rect x="150" y="430" width="900" height="300" rx="48" fill="rgba(255,255,255,0.10)"/>
-                <text x="600" y="620" text-anchor="middle" font-size="120" fill="${corTexto}" font-family="Arial, sans-serif" font-weight="700">${texto}</text>
-            </svg>
-        `;
-
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg.trim())}`;
-    }
-
-    function aplicarImagensLocais() {
-        document.querySelectorAll('img').forEach((img, indice) => {
-            const label = (img.getAttribute('alt') || '').trim() || `Foto ${indice + 1}`;
-            if (!img.dataset.srcOriginal && img.currentSrc && img.currentSrc !== 'about:blank') {
-                img.dataset.srcOriginal = img.currentSrc;
-            }
-
-            if (!img.dataset.localizado) {
-                img.dataset.localizado = 'true';
-                img.src = criarImagemLocal(label, indice);
-            }
-        });
-    }
 
     // O mesmo ID identifica cópias da foto na galeria principal e nos álbuns.
     function atribuirIdsUnicos() {
@@ -192,6 +156,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputAtivo = document.querySelector('.visor-input:checked');
         return inputAtivo ? inputAtivo.closest('.foto-item') : null;
     }
+
+    let inicioGestoVisor = null;
+    let ignorarCliqueDoGesto = false;
+
+    function navegarPeloVisor(itemAtual, direcao) {
+        const gradeAtual = itemAtual?.closest('.grade-fotos');
+        if (!gradeAtual) return;
+
+        const itens = Array.from(gradeAtual.children).filter((item) =>
+            item.classList.contains('foto-item') && item.querySelector('.visor-input')
+        );
+        const indiceAtual = itens.indexOf(itemAtual);
+        const proximoIndice = indiceAtual + direcao;
+
+        if (indiceAtual < 0 || proximoIndice < 0 || proximoIndice >= itens.length) return;
+
+        const inputAtual = itemAtual.querySelector('.visor-input');
+        const proximoInput = itens[proximoIndice].querySelector('.visor-input');
+
+        inputAtual.checked = false;
+        proximoInput.checked = true;
+    }
+
+    document.addEventListener('pointerdown', (event) => {
+        const visor = event.target.closest('.visor-foto');
+        if (!visor || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+        inicioGestoVisor = {
+            x: event.clientX,
+            y: event.clientY,
+            visor,
+        };
+    });
+
+    document.addEventListener('pointerup', (event) => {
+        if (!inicioGestoVisor) return;
+
+        const deslocamentoX = event.clientX - inicioGestoVisor.x;
+        const deslocamentoY = event.clientY - inicioGestoVisor.y;
+        const distanciaMinima = 50;
+        const eHorizontal = Math.abs(deslocamentoX) >= distanciaMinima &&
+            Math.abs(deslocamentoX) > Math.abs(deslocamentoY);
+
+        if (eHorizontal) {
+            event.preventDefault();
+            navegarPeloVisor(
+                inicioGestoVisor.visor.closest('.foto-item'),
+                deslocamentoX < 0 ? 1 : -1
+            );
+            ignorarCliqueDoGesto = true;
+            window.setTimeout(() => {
+                ignorarCliqueDoGesto = false;
+            }, 400);
+        }
+
+        inicioGestoVisor = null;
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!ignorarCliqueDoGesto) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        ignorarCliqueDoGesto = false;
+    }, true);
 
     function obterFotosParaAcao() {
         if (fotosSelecionadas.size > 0) {
@@ -605,10 +634,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    aplicarImagensLocais();
     atribuirIdsUnicos();
     inicializarBotoesVisualizacao();
     bindFotoEvents();
     atualizarContagemTotal();
     contadorSelecao.textContent = '0 selecionadas';
+});
+
+/* Recebe as capturas do index.html e adiciona-as à galeria incorporada. */
+window.addEventListener('message', (event) => {
+    if (event.data?.tipo !== 'jovi-atualizar-galeria') return;
+
+    const grade = document.getElementById('grade-fotos-recentes');
+    if (!grade) return;
+
+    const midias = Array.isArray(event.data.midias) ? event.data.midias : [];
+    const existentes = new Set(
+        Array.from(grade.querySelectorAll('[data-jovi-midia]')).map((item) => item.dataset.joviMidia)
+    );
+
+    midias.forEach((midia, indice) => {
+        const id = `captura-${indice}`;
+        if (!midia?.url || existentes.has(id)) return;
+
+        const item = document.createElement('li');
+        item.className = 'foto-item';
+        item.dataset.joviMidia = id;
+
+        const inputId = `${id}-input`;
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = inputId;
+        input.className = 'visor-input';
+
+        const miniatura = document.createElement('label');
+        miniatura.htmlFor = inputId;
+        miniatura.className = 'foto-miniatura';
+
+        const visor = document.createElement('label');
+        visor.htmlFor = inputId;
+        visor.className = 'visor-foto';
+        visor.setAttribute('aria-label', 'Fechar mídia');
+
+        const fechar = document.createElement('span');
+        fechar.className = 'botao-fechar-visor';
+        fechar.setAttribute('aria-hidden', 'true');
+        fechar.textContent = '×';
+
+        const criarElementoMidia = (emFoco) => {
+            const elemento = document.createElement(midia.tipo === 'video' ? 'video' : 'img');
+            elemento.src = midia.url;
+            elemento.alt = `Mídia capturada ${indice + 1}`;
+
+            if (midia.tipo === 'video') {
+                elemento.muted = true;
+                elemento.playsInline = true;
+                elemento.controls = emFoco;
+            } else if (!emFoco) {
+                elemento.loading = 'lazy';
+            }
+
+            return elemento;
+        };
+
+        miniatura.appendChild(criarElementoMidia(false));
+        visor.appendChild(fechar);
+        visor.appendChild(criarElementoMidia(true));
+        item.append(input, miniatura, visor);
+        grade.prepend(item);
+    });
+
+    const contador = document.querySelector('.painel-fotos .contagem-itens');
+    if (contador) {
+        contador.textContent = `Você possui ${grade.children.length} itens.`;
+    }
 });

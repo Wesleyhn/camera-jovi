@@ -58,6 +58,9 @@ let gravacaoIntervalo = null;
 
 let filtroAtual = 'normal';
 
+/* Mídias capturadas ficam disponíveis enquanto o index.html estiver aberto. */
+window.joviMidias = window.joviMidias || [];
+
 function redimensionarVideo() {
   if (!video) return;
 
@@ -268,9 +271,13 @@ async function tirarFoto() {
 /* CRIAR FOTO */
 
 function criarFoto(url) {
+  window.joviMidias.push({ tipo: 'foto', url });
+
   if (previewImage) {
     previewImage.src = url;
   }
+
+  window.dispatchEvent(new CustomEvent('jovi-midia-criada'));
 }
 
 /* TEMPORIZADOR */
@@ -412,6 +419,8 @@ function gravarVideo() {
 /* CRIAR VÍDEO */
 
 function criarVideo(url) {
+  window.joviMidias.push({ tipo: 'video', url });
+
   if (previewImage && video.videoWidth && video.videoHeight) {
     canvas.width = video.videoWidth;
 
@@ -423,7 +432,61 @@ function criarVideo(url) {
   }
 
   window.ultimoVideoGravado = url;
+  window.dispatchEvent(new CustomEvent('jovi-midia-criada'));
 }
+
+/* GALERIA POPUP */
+
+const galeriaPopup = document.getElementById('galeria-popup');
+const galeriaFrame = document.getElementById('galeria-frame');
+
+function enviarMidiasParaGaleria() {
+  if (!galeriaFrame?.contentWindow) return;
+
+  galeriaFrame.contentWindow.postMessage(
+    {
+      tipo: 'jovi-atualizar-galeria',
+      midias: window.joviMidias,
+    },
+    window.location.origin,
+  );
+}
+
+function abrirGaleriaPopup(event) {
+  event?.preventDefault();
+  if (!galeriaPopup) return;
+
+  galeriaPopup.classList.remove('hidden');
+  galeriaPopup.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('overflow-hidden');
+  enviarMidiasParaGaleria();
+}
+
+function fecharGaleria() {
+  if (!galeriaPopup) return;
+
+  galeriaPopup.classList.add('hidden');
+  galeriaPopup.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('overflow-hidden');
+}
+
+document
+  .querySelectorAll('[data-abrir-galeria-popup], #onehand-galeria')
+  .forEach((botao) => {
+    botao.addEventListener('click', abrirGaleriaPopup);
+  });
+
+galeriaFrame?.addEventListener('load', enviarMidiasParaGaleria);
+window.addEventListener('jovi-midia-criada', enviarMidiasParaGaleria);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') fecharGaleria();
+});
+
+/* Fecha o popup quando o botão "voltar" dentro da galeria pede o fechamento */
+window.addEventListener('message', (event) => {
+  if (event.origin !== window.location.origin) return;
+  if (event.data?.tipo === 'jovi-fechar-galeria') fecharGaleria();
+});
 
 /* FLASH */
 

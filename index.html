@@ -428,7 +428,10 @@
             </div>
 
             <div class="flex justify-between items-center px-8 py-4">
-              <a href="./galeria.html" class="hover:cursor-pointer">
+              <a
+                href="./galeria.html"
+                data-abrir-galeria-popup
+                class="hover:cursor-pointer">
                 <div
                   id="preview-container"
                   class="w-12 h-10 overflow-hidden rounded-lg">
@@ -466,6 +469,20 @@
             </div>
           </div>
         </div>
+
+        <!-- Galeria em tela cheia: o conteúdo original continua em galeria.html. -->
+        <section
+          id="galeria-popup"
+          class="hidden fixed inset-0 bg-black"
+          aria-label="Galeria Jovi"
+          aria-hidden="true"
+          style="z-index: 2147483647; isolation: isolate">
+          <iframe
+            id="galeria-frame"
+            title="Galeria Jovi"
+            src="./galeria.html"
+            class="h-full w-full border-0"></iframe>
+        </section>
 
         <!-- Imagem da câmera -->
         <video
