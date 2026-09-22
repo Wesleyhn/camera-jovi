@@ -151,6 +151,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Clicar na foto amplia/reduz o zoom em vez de fechar o visor.
+    document.addEventListener('click', (event) => {
+        const imagem = event.target.closest('.visor-foto img');
+        if (!imagem) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        imagem.classList.toggle('foto-zoom');
+    });
+
+    // Ao fechar o visor, a próxima abertura já começa sem zoom.
+    document.addEventListener('change', (event) => {
+        if (!event.target.classList.contains('visor-input') || event.target.checked) return;
+
+        const imagem = event.target.closest('.foto-item')?.querySelector('.visor-foto img');
+        imagem?.classList.remove('foto-zoom');
+    });
+
     // Retorna a foto aberta no visor quando não existe uma seleção múltipla.
     function obterFotoAtiva() {
         const inputAtivo = document.querySelector('.visor-input:checked');
@@ -679,7 +697,10 @@ window.addEventListener('message', (event) => {
         const fechar = document.createElement('span');
         fechar.className = 'botao-fechar-visor';
         fechar.setAttribute('aria-hidden', 'true');
-        fechar.textContent = '×';
+        fechar.innerHTML =
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>' +
+            '</svg>';
 
         const criarElementoMidia = (emFoco) => {
             const elemento = document.createElement(midia.tipo === 'video' ? 'video' : 'img');
